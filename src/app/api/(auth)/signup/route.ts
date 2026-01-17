@@ -8,7 +8,9 @@ export async function POST(req:NextRequest) {
    let body = await req.json()
        console.log(body,"body")
 
-  const parsedData = registerSchema.safeParse(body)
+  const parsedData =  registerSchema.safeParse(body)
+         console.log(parsedData,"parsedData")
+
   if(!parsedData.success){
     return NextResponse.json({status:400,message:"validation Failed",errors:parsedData.error.flatten().fieldErrors})
   }
@@ -17,9 +19,12 @@ export async function POST(req:NextRequest) {
       password:parsedData.data?.password,
       confirmPassword:parsedData.data?.confirmPassword
     }
-  return await registerUser(payload)
+const user = await registerUser(payload)
+    return NextResponse.json({status:201,message:"new user",newuser:user})
+
         
     } catch (error) {
+        console.log(error)
         return NextResponse.json({status:500,message:"Internal Server Error"})
     }
  

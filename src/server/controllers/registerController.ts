@@ -4,13 +4,14 @@ import { NextResponse } from "next/server";
 export const register = async(payload:RegisterDTO)=>{
     const {email,password,confirmPassword} = payload
     try {
-        const duplicateemail = await user.findOne(email)
+        const duplicateemail = await user.findOne({email})
         if(duplicateemail){
-            return NextResponse.json({status:409,message:"Email is already registerd"})
-        }
+                throw new Error("EMAIL_EXISTS");     
+               }
         console.log("new user")
-        
+  return {email};
+ 
     } catch (error) {
-        
-    }
+            console.log(error)
+  throw new Error("Internal Server Error");    }
 }
