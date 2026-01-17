@@ -11,9 +11,58 @@ import {
 } from "@/components/ui/card"
 import { Eye, EyeOff } from "lucide-react"
 import Link from "next/link"
-
+import { RegisterForm,RegisterFormError } from "@/app/types/signUpPage"
+import { registerSchema } from "@/app/validators/loginAndRegvalidation"
+import { ZodError } from "zod"
+import {loginAndRegisterService} from "@/lib/commonFunction"
 const SignUp = () => {
 const [showeye, setShoweye] = useState(false)
+const initialUserAccount ={
+  email:"",
+  password :"",
+  confirmPassword:""
+}
+const [useraccount,setUserAccount] = useState<RegisterForm>(initialUserAccount)
+const [errors,setErrors] = useState<RegisterFormError>({})
+const setOnInputChnage =(e:React.ChangeEvent<HTMLInputElement>,fieldName:keyof RegisterForm):void=>{
+  const value = e.target.value;
+setUserAccount((prev)=>({
+  ...prev,
+  [fieldName]:value
+}))
+setErrors((prev)=>({
+  ...prev,
+  [fieldName]:undefined
+}))
+}
+const signUp =async (useraccount:RegisterForm):Promise<void>=>{
+  try{
+    const result = registerSchema.safeParse(useraccount)
+    console.log(result,"result")
+    if(!result.success){
+        const fieldError = result.error.flatten().fieldErrors
+        console.log(fieldError,"fieldError")
+        setErrors({
+          email:fieldError?.email?.[0],
+          password:fieldError?.password?.[0],
+          confirmPassword:fieldError?.confirmPassword?.[0]
+        })
+    }
+    let payload ={
+      email:result.data?.email,
+      password:result.data?.password,
+      confirmPassword:result.data?.confirmPassword
+    }
+    const response = await loginAndRegisterService (`/api/signup`,"POST",payload)
+
+  }
+  catch(error){
+    console.log(error)
+    if(error instanceof ZodError){
+      console.log(error,"zoderrors")
+    }
+  }
+}
 
   return (
     <div className="flex  w-full  px-2 ">
@@ -32,15 +81,18 @@ const [showeye, setShoweye] = useState(false)
             <Input
               type="email"
               placeholder="Example@gmail.com"
-              required
+              onChange={(e)=>{setOnInputChnage(e,"email")}}
             />
+            {errors && errors.email && (
+              <p className="text-red-500 text-xs sm:text-sm md:text-sm lg:text-sm leading-snug mt-1">{errors.email}</p>
+            )}
 
             <div className="relative">
               <Input
                 type={showeye ? "text" : "password"}
-                placeholder="••••••••"
-                required
+                placeholder="Password"
                 className="pr-10"
+                onChange={(e)=>{setOnInputChnage(e,"password")}}
               />
               <Button
                 type="button"
@@ -51,10 +103,32 @@ const [showeye, setShoweye] = useState(false)
                 {showeye ? <EyeOff /> : <Eye />}
               </Button>
             </div>
+            {errors && errors.password && (
+              <p className="text-red-500 text-xs sm:text-sm md:text-sm lg:text-sm leading-snug mt-1">{errors.password}</p>
+            )}
+            <div className="relative">
+              <Input
+                type={showeye ? "text" : "password"}
+                placeholder="ConfirmPassword"
+                className="pr-10"
+                onChange={(e)=>{setOnInputChnage(e,"confirmPassword")}}
+              />
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={() => setShoweye(!showeye)}
+                className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 p-0 cursor-pointer "
+              >
+                {showeye ? <EyeOff /> : <Eye />}
+              </Button>
+            </div>
+            {errors && errors.confirmPassword && (
+              <p className="text-red-500 text-xs sm:text-sm md:text-sm lg:text-sm leading-snug mt-1">{errors.confirmPassword}</p>
+            )}
             <Button variant="outline" className="w-full">
               Google Signup
             </Button>
-            <Button className="w-full">
+            <Button className="w-full" type="button" onClick={()=>signUp(useraccount)}>
               Signup
             </Button>
               <div className="flex flex-col sm:flex-row sm:justify-between gap-2 sm:gap-0 text-sm text-blue-500">
