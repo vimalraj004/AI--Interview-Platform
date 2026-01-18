@@ -1,12 +1,18 @@
 import { RegisterDTO } from "@/app/types/signUpPage";
-import { NextResponse } from "next/server";
-import {register} from "@/server/controllers/registerController"
-export const registerUser = async (payload:RegisterDTO)=>{
-    try {
-        return await register(payload)
-        
-    } catch (error) {
-            console.log(error)
-            throw new Error
-    }
-}
+import {
+  existingUser,
+  addNewUser,
+} from "@/server/controllers/registerController";
+import { hashPassword } from "../lib/bcrypt";
+export const registerUser = async (payload: RegisterDTO) => {
+  const { email, password } = payload;
+  // find existingUser or not
+  await existingUser(email);
+  // bcrpt(hash) password
+  const hashedPassword = await hashPassword(password);
+  let newuser = {
+    ...payload,
+    password: hashedPassword,
+  };
+  return await addNewUser(newuser);
+};

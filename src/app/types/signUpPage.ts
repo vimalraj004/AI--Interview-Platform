@@ -2,16 +2,17 @@ import { registerSchema } from "../validators/loginAndRegvalidation";
 import {z} from "zod"
 export type RegisterForm = z.infer<typeof registerSchema>;
 export type RegisterFormError = {
-    email?:String,
-    password?:String,
-    confirmPassword?:String
+    email?:string,
+    password?:string,
+    confirmPassword?:string
 }
 export interface RegisterDTO {
-    email:String,
-    password:String,
+    email:string,
+    password:string,
     confirmPassword:string
 }
 export interface RegisterDTOResponse {
-    message:String,
-    userId:String,
+    status:number,
+    message:string,
+    userdata:object,
 }

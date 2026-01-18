@@ -1,5 +1,6 @@
 import React from "react";
-import  "./styles/authLayout.css" 
+import "./styles/authLayout.css";
+import { ToastContainer, toast } from "react-toastify";
 
 interface Props {
   children: React.ReactNode;
@@ -57,9 +58,12 @@ const AuthLayout = ({ children }: Props) => {
 
         {/* RIGHT — LOGIN */}
         <div className="flex h-full items-center justify-center p-6 md:p-12">
-          <div className="w-full max-w-md">{children}</div>
+          <div className="w-full max-w-md">
+            {children} 
+          </div>
         </div>
       </div>
+        <ToastContainer />
     </div>
   );
 };

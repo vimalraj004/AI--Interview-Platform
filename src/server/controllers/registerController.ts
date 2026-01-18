@@ -1,17 +1,17 @@
-import { RegisterDTO } from "@/app/types/signUpPage";
 import user from "../models/userModel";
-import { NextResponse } from "next/server";
-export const register = async(payload:RegisterDTO)=>{
-    const {email,password,confirmPassword} = payload
-    try {
-        const duplicateemail = await user.findOne({email})
-        if(duplicateemail){
-                throw new Error("EMAIL_EXISTS");     
-               }
-        console.log("new user")
-  return {email};
- 
-    } catch (error) {
-            console.log(error)
-  throw new Error("Internal Server Error");    }
-}
+import { httpError } from "@/errors/http.erros";
+export const existingUser = async (email: string): Promise<void> => {
+  const duplicateemail = await user.findOne({ email });
+  if (duplicateemail) {
+    throw new httpError("Email already exists", 409);
+  }
+};
+export const addNewUser = async (newUser: object): Promise<object> => {
+  const newuseradded = await user.create(newUser);
+  console.log(newuseradded, "newuseradded");
+  if (!newuseradded) {
+    throw new httpError("Failed to add user", 400);
+  }
+  const { confirmPassword,password, ...safeUser } = newuseradded.toObject();
+  return safeUser;
+};
