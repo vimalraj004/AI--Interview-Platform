@@ -16,6 +16,7 @@ import { loginFromError, loginForm } from "@/app/types/loginPage";
 import { loginSchema } from "@/app/validators/loginAndRegvalidation";
 import { useRouter } from "next/navigation";
 import { Audio } from "react-loader-spinner";
+import { loginAndRegisterService } from "@/lib/commonFunction";
 
 const LoginPage = () => {
   const [showeye, setShoweye] = useState(false);
@@ -27,12 +28,12 @@ const LoginPage = () => {
     useState<loginForm>(initialCredintials);
   const [errors, setErrors] = useState<loginFromError>({});
   const [loading, setLoading] = useState(false);
-  
+
   let navigate = useRouter();
   const setOnInputChnage = (
     e: React.ChangeEvent<HTMLInputElement>,
     fieldName: keyof loginForm,
-  ) => {
+  ): void => {
     const value = e.target.value;
     setUserCredentials((prev) => ({
       ...prev,
@@ -44,14 +45,37 @@ const LoginPage = () => {
     }));
   };
 
-  const login = () => {
+  const login = async (userCredentials: loginForm): Promise<void> => {
     try {
-      setLoading(true)
+      setLoading(true);
+      const result = loginSchema.safeParse(userCredentials);
+      if (!result.success) {
+        const fieldError = result.error.flatten().fieldErrors;
+        setErrors({
+          email: fieldError.email?.[0],
+          password: fieldError.password?.[0],
+        });
+        return;
+      }
+      let payload = {
+        email: result?.data?.email,
+        password: result?.data?.password,
+      };
+      const response = await loginAndRegisterService(
+        "/api/login",
+        "POST",
+        payload,
+      );
+      console.log(response, "response");
+      toast.success(response.message);
+      setTimeout(() => {
+        navigate.push("/dashboard");
+      }, 700);
     } catch (error: any) {
       console.log(error);
       toast.error(error.message || "Something went wrong");
-    }finally{
-      setLoading(false)
+    } finally {
+      setLoading(false);
     }
   };
   return (
@@ -102,10 +126,10 @@ const LoginPage = () => {
             <Button
               className="w-full"
               onClick={() => {
-                login();
+                login(userCredentials);
               }}
             >
-             {!loading ? (
+              {!loading ? (
                 "Login"
               ) : (
                 <div className="flex items-center gap-2">
