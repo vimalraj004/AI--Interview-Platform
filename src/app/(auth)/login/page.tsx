@@ -1,30 +1,65 @@
-"use client"
-import React, { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+"use client";
+import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { Eye, EyeOff } from "lucide-react"
-import Link from "next/link"
+} from "@/components/ui/card";
+import { Eye, EyeOff } from "lucide-react";
+import Link from "next/link";
+import { ToastContainer, toast } from "react-toastify";
+import { loginFromError, loginForm } from "@/app/types/loginPage";
+import { loginSchema } from "@/app/validators/loginAndRegvalidation";
+import { useRouter } from "next/navigation";
+import { Audio } from "react-loader-spinner";
 
 const LoginPage = () => {
-  const [showeye, setShoweye] = useState(false)
+  const [showeye, setShoweye] = useState(false);
+  const initialCredintials = {
+    email: "",
+    password: "",
+  };
+  const [userCredentials, setUserCredentials] =
+    useState<loginForm>(initialCredintials);
+  const [errors, setErrors] = useState<loginFromError>({});
+  const [loading, setLoading] = useState(false);
+  
+  let navigate = useRouter();
+  const setOnInputChnage = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    fieldName: keyof loginForm,
+  ) => {
+    const value = e.target.value;
+    setUserCredentials((prev) => ({
+      ...prev,
+      [fieldName]: value,
+    }));
+    setErrors((prev) => ({
+      ...prev,
+      [fieldName]: undefined,
+    }));
+  };
 
+  const login = () => {
+    try {
+      setLoading(true)
+    } catch (error: any) {
+      console.log(error);
+      toast.error(error.message || "Something went wrong");
+    }finally{
+      setLoading(false)
+    }
+  };
   return (
     <div className="flex  w-full  px-2 ">
       <Card className="w-full max-w-md backdrop-blur-md h-full  shadow-xl  ">
         <CardHeader className="text-center space-y-1">
-          <CardTitle className="text-xl md:text-2xl">
-            Login
-          </CardTitle>
-          <CardDescription>
-            Enter Email And Password To Login
-          </CardDescription>
+          <CardTitle className="text-xl md:text-2xl">Login</CardTitle>
+          <CardDescription>Enter Email And Password To Login</CardDescription>
         </CardHeader>
 
         <CardContent>
@@ -32,15 +67,20 @@ const LoginPage = () => {
             <Input
               type="email"
               placeholder="Example@gmail.com"
-              required
+              onChange={(e) => setOnInputChnage(e, "email")}
             />
+            {errors && errors.email && (
+              <p className="text-red-500 text-xs sm:text-sm md:text-sm lg:text-sm leading-snug mt-1">
+                {errors.email}
+              </p>
+            )}
 
             <div className="relative">
               <Input
                 type={showeye ? "text" : "password"}
                 placeholder="••••••••"
-                required
                 className="pr-10"
+                onChange={(e) => setOnInputChnage(e, "password")}
               />
               <Button
                 type="button"
@@ -51,21 +91,44 @@ const LoginPage = () => {
                 {showeye ? <EyeOff /> : <Eye />}
               </Button>
             </div>
+            {errors && errors.email && (
+              <p className="text-red-500 text-xs sm:text-sm md:text-sm lg:text-sm leading-snug mt-1">
+                {errors.email}
+              </p>
+            )}
             <Button variant="outline" className="w-full">
               Google Login
             </Button>
-            <Button className="w-full">
-              Login
+            <Button
+              className="w-full"
+              onClick={() => {
+                login();
+              }}
+            >
+             {!loading ? (
+                "Login"
+              ) : (
+                <div className="flex items-center gap-2">
+                  <Audio
+                    height="30"
+                    width="30"
+                    color="#4fa94d"
+                    ariaLabel="audio-loading"
+                    visible={true}
+                  />
+                  <span className="text-sm text-gray-600">Loading...</span>
+                </div>
+              )}
             </Button>
-              <div className="flex flex-col sm:flex-row sm:justify-between gap-2 sm:gap-0 text-sm text-blue-500">
-              <Link href={"/signup"} >New User?</Link>
-              <Link href={"/forgetpassword"} >Forget Password ?</Link>
+            <div className="flex flex-col sm:flex-row sm:justify-between gap-2 sm:gap-0 text-sm text-blue-500">
+              <Link href={"/signup"}>New User?</Link>
+              <Link href={"/forgetpassword"}>Forget Password ?</Link>
             </div>
           </form>
         </CardContent>
       </Card>
     </div>
-  )
-}
+  );
+};
 
-export default LoginPage
+export default LoginPage;
