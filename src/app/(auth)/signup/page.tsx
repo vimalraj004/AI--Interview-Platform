@@ -17,9 +17,10 @@ import { loginAndRegisterService } from "@/lib/commonFunction";
 import { ToastContainer, toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { Audio } from "react-loader-spinner";
+import { useLoading } from "@/app/context/loadingContext";
 const SignUp = () => {
   const [showeye, setShoweye] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const { loading, setLoading } = useLoading();
   const initialUserAccount = {
     email: "",
     password: "",
@@ -92,7 +93,13 @@ const SignUp = () => {
         </CardHeader>
 
         <CardContent>
-          <form className="space-y-4">
+          <form
+            className="space-y-4"
+            onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
+              e.preventDefault();
+              signUp(useraccount);
+            }}
+          >
             <Input
               type="email"
               placeholder="Example@gmail.com"

@@ -4,3 +4,9 @@ export const hashPassword = (password:string):Promise<string>=>{
     const hashedPassword = bcrypt.hash(password,10) // this one will return promise thats y  this over all function output become Promise<string>
     return hashedPassword
 }
+
+export const comparePassword =async (password:string,accountPassword:string):Promise<boolean>=>{
+    const result = await bcrypt.compare(password,accountPassword)
+    console.log("passwordresult",result)
+    return result
+}

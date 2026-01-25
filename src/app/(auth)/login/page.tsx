@@ -17,7 +17,7 @@ import { loginSchema } from "@/app/validators/loginAndRegvalidation";
 import { useRouter } from "next/navigation";
 import { Audio } from "react-loader-spinner";
 import { loginAndRegisterService } from "@/lib/commonFunction";
-
+import { useLoading } from "@/app/context/loadingContext";
 const LoginPage = () => {
   const [showeye, setShoweye] = useState(false);
   const initialCredintials = {
@@ -27,7 +27,7 @@ const LoginPage = () => {
   const [userCredentials, setUserCredentials] =
     useState<loginForm>(initialCredintials);
   const [errors, setErrors] = useState<loginFromError>({});
-  const [loading, setLoading] = useState(false);
+  const { loading, setLoading } = useLoading();
 
   let navigate = useRouter();
   const setOnInputChnage = (
@@ -87,7 +87,13 @@ const LoginPage = () => {
         </CardHeader>
 
         <CardContent>
-          <form className="space-y-4">
+          <form
+            className="space-y-4"
+            onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
+              e.preventDefault();
+              login(userCredentials);
+            }}
+          >
             <Input
               type="email"
               placeholder="Example@gmail.com"
@@ -125,6 +131,7 @@ const LoginPage = () => {
             </Button>
             <Button
               className="w-full"
+              type="button"
               onClick={() => {
                 login(userCredentials);
               }}

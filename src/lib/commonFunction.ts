@@ -2,6 +2,7 @@ import axios, { AxiosError } from "axios";
 import { RegisterDTOResponse } from "@/app/types/signUpPage";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { loginrFormResponse } from "@/app/types/loginPage";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -11,7 +12,7 @@ export const loginAndRegisterService = async (
   endpoint: string,
   type: string,
   payload: object,
-): Promise<RegisterDTOResponse> => {
+): Promise<RegisterDTOResponse | loginrFormResponse> => {
   try {
     const response = await axios({
       url: `${process.env.NEXT_PUBLIC_BASE_URL}${endpoint}`,

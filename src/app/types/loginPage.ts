@@ -5,3 +5,12 @@ export type loginFromError = {
     email?:string,
     password?:string
 }
+export interface loginFormDTO{
+    email:string,
+    password:string
+}
+export interface loginrFormResponse {
+    status:number,
+    message:string,
+    userId:string
+}
