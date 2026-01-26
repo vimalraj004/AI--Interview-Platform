@@ -13,7 +13,7 @@ import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import { RegisterForm, RegisterFormError } from "@/app/types/signUpPage";
 import { registerSchema } from "@/app/validators/loginAndRegvalidation";
-import { loginAndRegisterService } from "@/lib/commonFunction";
+import { loginAndRegisterService } from "@/lib/utils";
 import { ToastContainer, toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { Audio } from "react-loader-spinner";

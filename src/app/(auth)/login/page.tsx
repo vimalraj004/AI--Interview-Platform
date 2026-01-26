@@ -16,7 +16,7 @@ import { loginFromError, loginForm } from "@/app/types/loginPage";
 import { loginSchema } from "@/app/validators/loginAndRegvalidation";
 import { useRouter } from "next/navigation";
 import { Audio } from "react-loader-spinner";
-import { loginAndRegisterService } from "@/lib/commonFunction";
+import { loginAndRegisterService } from "@/lib/utils";
 import { useLoading } from "@/app/context/loadingContext";
 const LoginPage = () => {
   const [showeye, setShoweye] = useState(false);

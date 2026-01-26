@@ -1,8 +1,11 @@
+
 import React from 'react'
 
 const dasboard = () => {
   return (
-    <div> welcome to dasboard</div>
+    <div className=' border-2 border-red-500'> 
+      welcome to dasboard3
+      </div>
   )
 }
 

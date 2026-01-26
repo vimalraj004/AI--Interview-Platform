@@ -1,8 +1,8 @@
 import axios, { AxiosError } from "axios";
 import { RegisterDTOResponse } from "@/app/types/signUpPage";
+import { loginrFormResponse } from "@/app/types/loginPage";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { loginrFormResponse } from "@/app/types/loginPage";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
