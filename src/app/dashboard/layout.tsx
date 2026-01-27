@@ -13,9 +13,9 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <SidebarProvider defaultOpen={false} >
+    <SidebarProvider className="border-2 border-purple-950  " defaultOpen={false} >
       <AppSidebar />
-      <main>
+      <main className="border-2 border-blue-600 ">
         <SidebarTrigger />
         {children}
       </main>
