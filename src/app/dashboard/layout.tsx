@@ -13,10 +13,10 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <SidebarProvider className="border-2 border-purple-950  " defaultOpen={false} >
+    <SidebarProvider  defaultOpen={false} >
       <AppSidebar />
-      <main className="border-2 border-blue-600 ">
-        <SidebarTrigger />
+      <main className=" bg-auth-gradient w-full min-h-screen">
+        <SidebarTrigger className="text-white" />
         {children}
       </main>
     </SidebarProvider>

@@ -1,3 +1,4 @@
+"use client"
 import { Calendar, Home, Inbox, Plus, Search, Settings } from "lucide-react"
 import {sideBarMenuItems} from "@/server/constants/constantdata"
 import {
@@ -13,9 +14,11 @@ import {
 } from "@/components/ui/sidebar"
 import Image from "next/image"
 import { Button } from "./ui/button"
+import { usePathname } from "next/navigation"
 
 
 export function AppSidebar() {
+  const path = usePathname()
   return (
     <Sidebar className="bg-auth-gradient">
       <SidebarHeader >
@@ -24,15 +27,14 @@ export function AppSidebar() {
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Application SideBar</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {sideBarMenuItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
+                <SidebarMenuItem key={item.title} className="p-1">
+                  <SidebarMenuButton asChild className="p-5">
                     <a href={item.url}>
-                      <item.icon />
-                      <span>{item.title}</span>
+                      <item.icon className={`${path === item.url ? "text-primary":"text-white"}`} />
+                      <span className={` text-[16px] ${path === item.url ? "text-primary":"text-white"}`}>{item.title}</span>
                     </a>
                   </SidebarMenuButton>
                 </SidebarMenuItem>

@@ -13,7 +13,7 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 222.2 47.4% 11.2%;
+    --primary: 210 95% 56%;
     --primary-foreground: 210 40% 98%;
 
     --secondary: 210 40% 96.1%;
@@ -74,7 +74,7 @@
     @apply bg-background text-foreground;
   }
 }
-.bg-auth-gradient {
+/* .bg-auth-gradient {
   background:
     radial-gradient(
       circle at top left,
@@ -87,6 +87,6 @@
       transparent 48%
     ),
     #020617;
-}
+} */
 
-
+.bg-auth-gradient { background: radial-gradient( circle at top left, rgba(99, 102, 241, 0.18), transparent 40% ), radial-gradient( circle at bottom right, rgba(139, 92, 246, 0.15), transparent 45% ), #020617; }

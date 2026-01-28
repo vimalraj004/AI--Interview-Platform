@@ -1,31 +1,22 @@
-import { Calendar, Home, Inbox, Plus, Search, Settings } from "lucide-react"
+import { Calendar, LayoutDashboard, List, Plus, Search, Settings } from "lucide-react"
 
 // Menu items.
 export  const sideBarMenuItems = [
   {
-    title: "Home",
-    url: "#",
-    icon: Home,
+    title: "Dashboard",
+    url: "/dashboard",
+    icon: LayoutDashboard,
   },
   {
-    title: "Inbox",
-    url: "#",
-    icon: Inbox,
-  },
-  {
-    title: "Calendar",
-    url: "#",
+    title: "Scheduled Interview",
+    url: "/scheduledInterview",
     icon: Calendar,
   },
   {
-    title: "Search",
-    url: "#",
-    icon: Search,
+    title: "All Interview",
+    url: "/allInterview",
+    icon: List,
   },
-  {
-    title: "Settings",
-    url: "#",
-    icon: Settings,
-  },
+
 ]
 
