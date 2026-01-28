@@ -1,5 +1,5 @@
 import React from "react";
-import "./styles/authLayout.css";
+// import "./styles/authLayout.css";
 import { ToastContainer, toast } from "react-toastify";
 
 interface Props {
