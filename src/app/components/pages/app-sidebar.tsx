@@ -11,9 +11,9 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar"
+} from "@/app/components/ui/sidebar"
 import Image from "next/image"
-import { Button } from "./ui/button"
+import { Button } from "@/app/components/ui/button"
 import { usePathname } from "next/navigation"
 
 

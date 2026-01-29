@@ -1,14 +1,14 @@
 "use client";
 import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Button } from "@/app/components/ui/button";
+import { Input } from "@/app/components/ui/input";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from "@/app/components/ui/card";
 import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import { ToastContainer, toast } from "react-toastify";

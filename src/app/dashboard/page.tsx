@@ -1,10 +1,13 @@
 
+import WelcomeContainer from '@/app/components/pages/WelcomeContainer'
 import React from 'react'
 
 const dasboard = () => {
   return (
-    <div className=' border-2 border-red-500 '> 
-      welcome to dasboard3
+    <div className='
+
+     min-h-screen w-full pt-5 pr-5 '> 
+      <WelcomeContainer />
       </div>
   )
 }

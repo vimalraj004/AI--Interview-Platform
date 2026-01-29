@@ -4,8 +4,8 @@ import {
   SidebarProvider,
   SidebarTrigger,
   SidebarInset,
-} from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/app-sidebar";
+} from "@/app/components/ui/sidebar";
+import { AppSidebar } from "@/app/components/pages/app-sidebar";
 
 export default function DashboardLayout({
   children,
@@ -15,7 +15,7 @@ export default function DashboardLayout({
   return (
     <SidebarProvider  defaultOpen={false} >
       <AppSidebar />
-      <main className=" bg-auth-gradient w-full min-h-screen">
+      <main className=" bg-auth-gradient w-full min-h-screen flex">
         <SidebarTrigger className="text-white" />
         {children}
       </main>
