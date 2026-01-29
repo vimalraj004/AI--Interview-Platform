@@ -4,23 +4,23 @@ import React from "react";
 
 const WelcomeContainer = () => {
   return (
-    <div className=" h-auto w-full  rounded-xl border border-white/10  bg-white/5 backdrop-blur-md p-1  grid grid-cols-[6fr_0.5fr_0.5fr] items-center gap-2  ">
+    <div className=" h-auto w-full  rounded-xl border border-white/10  bg-white/5 backdrop-blur-md   grid grid-cols-1 md:grid-cols-[1fr_auto]  lg:grid-cols-[6fr_0.5fr_0.5fr]  gap-3 px-4 py-3  ">
       {/* Greetings */}
       <div className=" w-auto  ">
-        <h1 className="font-semibold text-xl font-mono text-gray-100 ">
+        <h1 className="font-semibold  font-mono text-gray-100 text-base sm:text-lg lg:text-xl ">
           welcome Back vimalraj
         </h1>
-        <p className="text-gray-400 font-mono text-sm">
+        <p className="text-gray-400 font-mono text-xs sm:*:text-sm ">
           AI-Driven Interview,Trainyourself until you get placed
         </p>
       </div>
       {/* Remainder */}
-      <div className="flex items-center justify-center">
-        <BellRing className="text-gray-300 hover:text-blue-400 transition" />
+      <div className="flex items-center justify-end gap-4 lg:justify-center">
+        <BellRing className="text-gray-300 hover:text-blue-400 transition cursor-pointer" />
       </div>
       {/* ProfileIcon */}
       <div className="flex items-center justify-center">
-        <div className="h-10 w-10 rounded-full bg-blue-500/20 border border-blue-400/30 flex items-center justify-center">
+        <div className="h-9 w-9 rounded-full bg-blue-500/20 border border-blue-400/30 flex items-center justify-center cursor-pointer">
           <Image
             src={"/codie_transparent.bdfb741fb8a3211d12e3.png"}
             height={32}
