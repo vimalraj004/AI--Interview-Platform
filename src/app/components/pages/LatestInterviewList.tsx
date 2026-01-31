@@ -3,10 +3,11 @@
 import { Plus, Video } from "lucide-react";
 import React, { useState } from "react";
 import { Button } from "../ui/button";
+import { useRouter } from "next/navigation";
 
 const LatestInterviewList = () => {
   const [latestInterviewList, setLatestInterviewList] = useState([]);
-
+  const router = useRouter()
   return (
     <div className="mt-6">
       {latestInterviewList.length === 0 && (
@@ -36,7 +37,7 @@ const LatestInterviewList = () => {
           </p>
 
           {/* CTA */}
-          <Button className="mt-2 flex items-center gap-2">
+          <Button className="mt-2 flex items-center gap-2" onClick={()=> router.push("/dashboard/createInterview")}>
             <Plus size={16} />
             Create your first interview
           </Button>
