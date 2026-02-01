@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { MouseEvent, useState } from "react";
 import { Input } from "../ui/input";
 import { Textarea } from "@/app/components/ui/textarea";
 import {
@@ -13,8 +13,37 @@ import {
 import { interviewTypes } from "@/server/constants/constantdata";
 import { Button } from "../ui/button";
 import { ArrowRight } from "lucide-react";
+import { NewFormData, NewFormDataEvent } from "@/app/types/newInterivewFormpage";
 
 const FormContainer = () => {
+  const initialFormData = {
+     jobPosition:"",
+    jobDescription:"",
+    duration:"",
+    interviewTypes:[]
+  }
+  const [formData,setFormData] = useState<NewFormData>(initialFormData)
+  console.log(formData,"formData")
+  const handleAnswerChange=(field:keyof NewFormData ,e:NewFormDataEvent):void=>{
+    let value = typeof(e)=== "string"?e: e.target.value;
+    setFormData((prev)=>{
+        
+    if(field === "interviewTypes"){
+      const exist = prev.interviewTypes.includes(value)
+      return{
+        ...prev,
+        interviewTypes:exist?prev.interviewTypes.filter((item)=>item !== value):[...prev.interviewTypes,value]
+      }
+    }
+    return{
+      ...prev,
+      [field]:value
+
+    }
+    })
+
+
+  }
   return (
     <div className="bg-white rounded-xl p-4 sm:p-6 lg:p-8 max-w-3xl mx-auto space-y-6">
       {/* Job Position */}
@@ -22,7 +51,7 @@ const FormContainer = () => {
         <h2 className="font-mono font-semibold text-sm sm:text-base text-gray-800">
           Job Position
         </h2>
-        <Input placeholder="Full Stack Developer" />
+        <Input placeholder="Full Stack Developer" onChange={(e)=>handleAnswerChange("jobPosition",e)} />
       </div>
 
       {/* Job Description */}
@@ -30,7 +59,7 @@ const FormContainer = () => {
         <h2 className="font-mono font-semibold text-sm sm:text-base text-gray-800">
           Job Description
         </h2>
-        <Textarea placeholder="Enter detailed job description" />
+        <Textarea placeholder="Enter detailed job description" onChange={((e)=>handleAnswerChange("jobDescription",e))} />
       </div>
 
       {/* Interview Duration */}
@@ -38,7 +67,7 @@ const FormContainer = () => {
         <h2 className="font-mono font-semibold text-sm sm:text-base text-gray-800">
           Interview Duration
         </h2>
-        <Select>
+        <Select onValueChange={(e)=>handleAnswerChange("duration",e)}>
           <SelectTrigger className="w-full sm:w-[200px]">
             <SelectValue placeholder="Select Duration" />
           </SelectTrigger>
@@ -60,10 +89,11 @@ const FormContainer = () => {
           {interviewTypes.map((type) => (
             <div
               key={type.title}
-              className="flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2.5 
+              className={`flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2.5 
                          border border-gray-300 rounded-xl cursor-pointer
                          bg-gray-50 hover:bg-blue-50 hover:border-blue-400
-                         transition-all duration-200"
+                         transition-all duration-200 ${formData.interviewTypes.includes(type.title)?"bg-blue-300 text-primary":""}` }
+                         onClick={()=>handleAnswerChange("interviewTypes",type.title)}
             >
               <type.icon className="h-4 w-4" />
               <span className="text-sm font-medium">{type.title}</span>
