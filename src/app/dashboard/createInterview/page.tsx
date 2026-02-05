@@ -6,10 +6,12 @@ import { ArrowLeft } from "lucide-react";
 import { Progress } from "@/app/components/ui/progress";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import QuestionList from "@/app/components/pages/QuestionList";
 
 const CreateInterviewPage = () => {
   const router = useRouter();
-  const [step] = useState(1);
+  const [step,setStep] = useState(1);
+  console.log(step,"step")
 
   return (
     <div className="w-full">
@@ -42,7 +44,11 @@ const CreateInterviewPage = () => {
 
         {/* Form */}
         <div className="mt-6">
-          <FormContainer />
+          {step === 1 ? (
+            <FormContainer setStep={setStep} />
+          ) : step === 2 ? (
+            <QuestionList />
+          ) : null}
         </div>
       </div>
     </div>

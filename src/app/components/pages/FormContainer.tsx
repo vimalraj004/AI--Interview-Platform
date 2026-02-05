@@ -14,34 +14,47 @@ import { interviewTypes } from "@/server/constants/constantdata";
 import { Button } from "../ui/button";
 import { ArrowRight } from "lucide-react";
 import { NewFormData, NewFormDataEvent } from "@/app/types/newInterivewFormpage";
+import { useGlobalStore } from "@/app/Hooks/useGlobalStore";
+import { FormDataStore } from "@/app/Hooks/FormDataStore";
 
-const FormContainer = () => {
-  const initialFormData = {
-     jobPosition:"",
-    jobDescription:"",
-    duration:"",
-    interviewTypes:[]
-  }
-  const [formData,setFormData] = useState<NewFormData>(initialFormData)
+
+interface FormContainerProps{
+// children:React.ReactNode
+setStep :React.Dispatch<React.SetStateAction<number>>
+}
+const FormContainer = ({setStep}:FormContainerProps) => {
+  // const initialFormData = {
+  //    jobPosition:"",
+  //   jobDescription:"",
+  //   duration:"",
+  //   interviewTypes:[]
+  // }
+  // const [formData,setFormData] = useState<NewFormData>(initialFormData)
+  const formData = useGlobalStore()
   console.log(formData,"formData")
   const handleAnswerChange=(field:keyof NewFormData ,e:NewFormDataEvent):void=>{
     let value = typeof(e)=== "string"?e: e.target.value;
-    setFormData((prev)=>{
+    let prev = FormDataStore.getsnapshot()
+    console.log(prev,"prev")
         
     if(field === "interviewTypes"){
       const exist = prev.interviewTypes.includes(value)
-      return{
+      FormDataStore.setFormData(
+        {
         ...prev,
         interviewTypes:exist?prev.interviewTypes.filter((item)=>item !== value):[...prev.interviewTypes,value]
       }
+      )
+      return;
     }
-    return{
+ 
+    FormDataStore.setFormData({
       ...prev,
       [field]:value
 
-    }
     })
-
+   
+    
 
   }
   return (
@@ -104,7 +117,7 @@ const FormContainer = () => {
 
       {/* CTA */}
       <div className="flex justify-end pt-4">
-        <Button className="w-full sm:w-auto gap-2">
+        <Button className="w-full sm:w-auto gap-2" onClick={()=>setStep((prev)=>prev+1)}>
           Generate Questions <ArrowRight size={16} />
         </Button>
       </div>
