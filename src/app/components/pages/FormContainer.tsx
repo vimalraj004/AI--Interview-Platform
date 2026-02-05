@@ -23,19 +23,12 @@ interface FormContainerProps{
 setStep :React.Dispatch<React.SetStateAction<number>>
 }
 const FormContainer = ({setStep}:FormContainerProps) => {
-  // const initialFormData = {
-  //    jobPosition:"",
-  //   jobDescription:"",
-  //   duration:"",
-  //   interviewTypes:[]
-  // }
-  // const [formData,setFormData] = useState<NewFormData>(initialFormData)
+
   const formData = useGlobalStore()
   console.log(formData,"formData")
   const handleAnswerChange=(field:keyof NewFormData ,e:NewFormDataEvent):void=>{
     let value = typeof(e)=== "string"?e: e.target.value;
     let prev = FormDataStore.getsnapshot()
-    console.log(prev,"prev")
         
     if(field === "interviewTypes"){
       const exist = prev.interviewTypes.includes(value)

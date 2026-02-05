@@ -11,7 +11,6 @@ import QuestionList from "@/app/components/pages/QuestionList";
 const CreateInterviewPage = () => {
   const router = useRouter();
   const [step,setStep] = useState(1);
-  console.log(step,"step")
 
   return (
     <div className="w-full">
