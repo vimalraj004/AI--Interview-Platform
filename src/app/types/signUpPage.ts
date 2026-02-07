@@ -14,5 +14,4 @@ export interface RegisterDTO {
 export interface RegisterDTOResponse {
     status:number,
     message:string,
-    userdata:object,
 }

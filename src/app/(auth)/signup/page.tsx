@@ -48,10 +48,8 @@ const SignUp = () => {
     try {
       setLoading(true);
       const result = registerSchema.safeParse(useraccount);
-      console.log(result, "result");
       if (!result.success) {
         const fieldError = result.error.flatten().fieldErrors;
-        console.log(fieldError, "fieldError");
         setErrors({
           email: fieldError?.email?.[0],
           password: fieldError?.password?.[0],
@@ -69,11 +67,10 @@ const SignUp = () => {
         "POST",
         payload,
       );
-      console.log(response, "response");
       toast.success(response.message);
       setTimeout(() => {
         navigate.push("/dashboard");
-      }, 700);
+      }, 500);
     } catch (error: any) {
       console.error(error);
       toast.error(error.message || "Something went wrong");

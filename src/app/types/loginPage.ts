@@ -12,5 +12,4 @@ export interface loginFormDTO{
 export interface loginrFormResponse {
     status:number,
     message:string,
-    userId:string
 }

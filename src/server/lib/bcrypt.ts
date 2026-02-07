@@ -7,6 +7,5 @@ export const hashPassword = (password:string):Promise<string>=>{
 
 export const comparePassword =async (password:string,accountPassword:string):Promise<boolean>=>{
     const result = await bcrypt.compare(password,accountPassword)
-    console.log("passwordresult",result)
     return result
 }

@@ -8,7 +8,6 @@ export const existingUser = async (email: string): Promise<void> => {
 };
 export const addNewUser = async (newUser: object): Promise<object> => {
   const newuseradded = await user.create(newUser);
-  console.log(newuseradded, "newuseradded");
   if (!newuseradded) {
     throw new httpError("Failed to add user", 400);
   }

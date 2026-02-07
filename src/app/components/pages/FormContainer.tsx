@@ -25,7 +25,6 @@ setStep :React.Dispatch<React.SetStateAction<number>>
 const FormContainer = ({setStep}:FormContainerProps) => {
 
   const formData = useGlobalStore()
-  console.log(formData,"formData")
   const handleAnswerChange=(field:keyof NewFormData ,e:NewFormDataEvent):void=>{
     let value = typeof(e)=== "string"?e: e.target.value;
     let prev = FormDataStore.getsnapshot()

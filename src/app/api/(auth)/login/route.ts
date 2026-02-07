@@ -3,13 +3,12 @@ import { httpError } from "@/errors/http.erros";
 import { dbConnect } from "@/server/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 import {loginService} from "@/server/services/loginPage"
+import { createTokens } from "@/server/lib/jwt";
 export async function POST (req:NextRequest){
 try {
     await dbConnect();
     const body = await req.json()
-    console.log(body,"body")
     const parsedData = loginSchema.safeParse(body)
-    console.log(parsedData, "parsedData");
     if(!parsedData.success){
         return NextResponse.json(
             {
@@ -24,12 +23,25 @@ try {
         password:parsedData.data.password
     }
     const user = await loginService(payload);
-    return NextResponse.json(
+    const tokensCreated = await createTokens(user)
+    const response =  NextResponse.json(
         {message:"Login Successfully",
-          userId:user
         },
         {status:200},
     )
+    response.cookies.set("accessToken",tokensCreated.accessToken,{
+        httpOnly:true,
+        secure:false,
+        sameSite:"strict",
+        maxAge:120
+    })
+     response.cookies.set("refreshToken",tokensCreated.refreshToken,{
+        httpOnly:true,
+        secure:false,
+        sameSite:"strict",
+        maxAge:180
+    })
+    return response
 } catch (error) {
     console.log(error)
     if(error instanceof httpError){

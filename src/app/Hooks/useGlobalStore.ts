@@ -5,6 +5,7 @@ export const useGlobalStore=()=> {
     return useSyncExternalStore(
         FormDataStore.subscribe,
         FormDataStore.getsnapshot,
+        FormDataStore.getServerSnapshot
 
     )
 }

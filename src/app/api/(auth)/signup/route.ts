@@ -3,14 +3,13 @@ import { dbConnect } from "@/server/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 import { registerUser } from "@/server/services/registerpage";
 import { httpError } from "@/errors/http.erros";
+import { createTokens } from "@/server/lib/jwt";
 export async function POST(req: NextRequest) {
   try {
     await dbConnect();
     let body = await req.json();
-    console.log(body, "body");
 
     const parsedData = registerSchema.safeParse(body);
-    console.log(parsedData, "parsedData");
 
     if (!parsedData.success) {
       return NextResponse.json({
@@ -25,20 +24,31 @@ export async function POST(req: NextRequest) {
       confirmPassword: parsedData.data?.confirmPassword,
     };
     const user = await registerUser(payload);
-    return NextResponse.json(
-      {
-        message: "Account Created",
-        user,
-      },
+    const tokensCreated = await createTokens(user);
+    const response = NextResponse.json(
+      { message: "Account Created" },
       { status: 201 },
     );
+    response.cookies.set("accessToken", tokensCreated.accessToken, {
+      httpOnly: true,
+      secure: false,
+      sameSite: "strict",
+      maxAge: 120,
+    });
+    response.cookies.set("refreshToken", tokensCreated.refreshToken, {
+      httpOnly: true,
+      secure: false,
+      sameSite: "strict",
+      maxAge: 180,
+    });
+    return response;
   } catch (error) {
     console.log(error);
     if (error instanceof httpError) {
-    return NextResponse.json(
-      { message: error.message },
-      { status: error.statuscode } 
-    );
+      return NextResponse.json(
+        { message: error.message },
+        { status: error.statuscode },
+      );
     }
     return NextResponse.json(
       { message: "Internal Server Error" },

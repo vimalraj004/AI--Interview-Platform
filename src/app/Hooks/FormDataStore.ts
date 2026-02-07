@@ -14,6 +14,10 @@ export const FormDataStore = {
     getsnapshot(){
         return formData
     },
+    // SERVER snapshot
+      getServerSnapshot() {
+    return initialFormData;
+  },
     // subcribe (like event listener)
     subscribe(listener:()=>void){
         checkAllComponents.add(listener);

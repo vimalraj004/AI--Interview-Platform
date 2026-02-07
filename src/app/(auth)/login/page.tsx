@@ -66,7 +66,6 @@ const LoginPage = () => {
         "POST",
         payload,
       );
-      console.log(response, "response");
       toast.success(response.message);
       setTimeout(() => {
         navigate.push("/dashboard");
