@@ -1,8 +1,11 @@
+"use client"
+import { useAuth } from "@/app/context/authContext";
 import { BellRing } from "lucide-react";
 import Image from "next/image";
 import React from "react";
 
 const WelcomeContainer = () => {
+  const {userData}=useAuth();
   return (
     <div
       className="
@@ -19,7 +22,7 @@ const WelcomeContainer = () => {
         {/* Text */}
         <div>
           <h1 className="font-semibold font-mono text-gray-100 text-base sm:text-lg lg:text-xl">
-            Welcome Back vimalraj
+            Welcome Back {userData?.name}
           </h1>
           <p className="text-gray-400 font-mono text-xs sm:text-sm">
             AI-Driven Interview, Train yourself until you get placed

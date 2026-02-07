@@ -12,11 +12,11 @@ import {
 import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import { ToastContainer, toast } from "react-toastify";
-import { loginFromError, loginForm } from "@/app/types/loginPage";
+import { loginFromError, loginForm, loginrFormResponse } from "@/app/types/loginPage";
 import { loginSchema } from "@/app/validators/loginAndRegvalidation";
 import { useRouter } from "next/navigation";
 import { Audio } from "react-loader-spinner";
-import { loginAndRegisterService } from "@/lib/utils";
+import { commonService } from "@/lib/utils";
 import { useLoading } from "@/app/context/loadingContext";
 const LoginPage = () => {
   const [showeye, setShoweye] = useState(false);
@@ -61,7 +61,7 @@ const LoginPage = () => {
         email: result?.data?.email,
         password: result?.data?.password,
       };
-      const response = await loginAndRegisterService(
+      const response = await commonService <loginrFormResponse>(
         "/api/login",
         "POST",
         payload,

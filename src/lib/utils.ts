@@ -8,26 +8,28 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export const loginAndRegisterService = async (
+export const commonService = async <TResponse> (
   endpoint: string,
   type: string,
-  payload: object,
-): Promise<RegisterDTOResponse | loginrFormResponse> => {
+  payload?: object,
+): Promise<TResponse> => {
   try {
     const response = await axios({
       url: `${process.env.NEXT_PUBLIC_BASE_URL}${endpoint}`,
       method: type,
       data: payload,
       headers: { "Content-Type": "application/json" },
+      withCredentials:true
     });
-    return response.data;
+    return response.data as TResponse;
   } catch (error: any) {
     if (axios.isAxiosError(error)) {
       throw {
-        message: error.response?.data?.message || "Request failed",
+        message: error.response?.data?.message || "Request Failed",
         status: error.response?.status,
       };
     }
     throw { message: "Something went Wrong" };
   }
 };
+

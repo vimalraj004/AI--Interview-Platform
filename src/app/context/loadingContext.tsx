@@ -18,7 +18,7 @@ export const LoadingProvider = ({children}:{children:React.ReactNode})=>{
 export const useLoading = ()=>{
     const context = useContext(loadingContext);
     if(!context){
-        throw new Error ("context need to be created")
+        throw new Error ("Loadingcontext need to be created")
     }
     return context;
 }

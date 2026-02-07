@@ -3,8 +3,6 @@ export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const accessToken = request.cookies.get("accessToken")?.value;
   const isPublicPath = pathname === "/"
-  console.log(pathname,"pathname")
-  console.log(isPublicPath,"isPublicPath")
   if(isPublicPath && accessToken){
     console.log("r u comming here")
       // Already logged in, no need to be on login page
