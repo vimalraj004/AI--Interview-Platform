@@ -8,7 +8,7 @@ const QuestionList = () => {
     console.log(formData,"checkFormdata")
     const getQuestions =async (formData:NewFormData)=>{
       try {
-        // const response = commonService()
+        const result = commonService("/api/getQuestionList","GET",formData)
         
       } catch (error) {
         console.log(error)
