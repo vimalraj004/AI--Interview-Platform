@@ -5,3 +5,6 @@ export interface NewFormData{
     interviewTypes:Array<string>
 }
 export type NewFormDataEvent = string | React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+export interface FormDataDTOResponse{
+    
+}

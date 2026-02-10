@@ -11,7 +11,8 @@ export async function GET(req: NextRequest) {
     await dbConnect();
     let body = await req.json();
     console.log(body, "body");
-    const result = await questionListService()
+    const result = await questionListService(body)
+    console.log(result,"result")
   } catch (error) {
     if (error instanceof httpError) {
       return NextResponse.json(
