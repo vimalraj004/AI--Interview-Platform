@@ -18,6 +18,7 @@ export const fetchQuestionList = async (body: NewFormData) => {
       model: "meta-llama/llama-3.3-70b-instruct:free",
       messages: [{ role: "user", content: FINAL_PROMPT }],
     });
+    console.log(completion,"completion")
     console.log(completion.choices[0].message);
     if(!completion){
         throw new httpError("Failed to get QuestionList",400)

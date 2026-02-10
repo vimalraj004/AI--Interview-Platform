@@ -6,8 +6,8 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
   try {
-    const middleware = await routeMiddleware(req);
-    if(middleware) return middleware
+    // const middleware = await routeMiddleware(req);
+    // if(middleware) return middleware
     await dbConnect();
     let body = await req.json();
     console.log(body, "body");
