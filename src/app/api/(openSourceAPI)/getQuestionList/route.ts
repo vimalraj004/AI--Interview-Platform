@@ -4,16 +4,14 @@ import { routeMiddleware } from "@/server/middlewares/routes.middleware";
 import { questionListService } from "@/server/services/questoinListPage";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(req: NextRequest) {
+export async function POST(req: NextRequest) {
   try {
-    // const middleware = await routeMiddleware(req);
-    // if(middleware) return middleware
     await dbConnect();
     let body = await req.json();
     console.log(body, "body");
     const result = await questionListService(body)
-    console.log(result,"result")
-  } catch (error) {
+    return NextResponse.json({message:"QuestionFetch",data:result},{status:200})
+  } catch (error:any) {
     if (error instanceof httpError) {
       return NextResponse.json(
         {

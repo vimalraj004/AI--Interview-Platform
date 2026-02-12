@@ -12,7 +12,8 @@ const QuestionList = () => {
     const getQuestions =async (formData:NewFormData)=>{
       try {
         setLoading(true)
-        const result = commonService("/api/getQuestionList","GET",formData)
+        const result = await commonService("/api/getQuestionList","POST",formData)
+        console.log(result,"resultfromfe")
         
       } catch (error) {
         console.log(error)
