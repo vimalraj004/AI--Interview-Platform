@@ -1,6 +1,6 @@
 import { useLoading } from '@/app/context/loadingContext'
 import { useGlobalStore } from '@/app/Hooks/useGlobalStore'
-import { NewFormData } from '@/app/types/newInterivewFormpage'
+import { FormDataDTOResponse, NewFormData } from '@/app/types/newInterivewFormpage'
 import { commonService } from '@/lib/utils'
 import React, { useEffect } from 'react'
 
@@ -9,10 +9,10 @@ const QuestionList = () => {
    const {loading,setLoading}= useLoading()
    console.log(loading,"loading")
     console.log(formData,"checkFormdata")
-    const getQuestions =async (formData:NewFormData)=>{
+    const getQuestions =async (formData:NewFormData) :Promise<void>=>{
       try {
         setLoading(true)
-        const result = await commonService("/api/getQuestionList","POST",formData)
+        const result = await commonService<FormDataDTOResponse>("/api/getQuestionList","POST",formData)
         console.log(result,"resultfromfe")
         
       } catch (error) {

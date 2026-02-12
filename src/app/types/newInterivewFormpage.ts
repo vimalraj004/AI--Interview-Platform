@@ -4,7 +4,10 @@ export interface NewFormData{
     duration:string,
     interviewTypes:Array<string>
 }
+
 export type NewFormDataEvent = string | React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
 export interface FormDataDTOResponse{
-    
+    message:string,
+    data:object,
+    status:number
 }
