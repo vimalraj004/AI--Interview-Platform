@@ -10,7 +10,7 @@ export async function POST(req: NextRequest) {
     let body = await req.json();
     console.log(body, "body");
     const result = await questionListService(body)
-    return NextResponse.json({message:"QuestionFetch",data:result},{status:200})
+    return NextResponse.json({message:"QuestionFetched",data:result},{status:200})
   } catch (error:any) {
     if (error instanceof httpError) {
       return NextResponse.json(

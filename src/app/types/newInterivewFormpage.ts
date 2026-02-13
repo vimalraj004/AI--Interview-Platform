@@ -6,6 +6,8 @@ export interface NewFormData{
 }
 
 export type NewFormDataEvent = string | React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+
+
 export interface FormDataDTOResponse{
     message:string,
     data:object,
