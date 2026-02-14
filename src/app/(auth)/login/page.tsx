@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/app/components/ui/button";
 import { Input } from "@/app/components/ui/input";
 import {
@@ -18,6 +18,8 @@ import { useRouter } from "next/navigation";
 import { Audio } from "react-loader-spinner";
 import { commonService } from "@/lib/utils";
 import { useLoading } from "@/app/context/loadingContext";
+import { initializeFireBase } from "@/firebase/firebase";
+import { FcGoogle } from "react-icons/fc";
 const LoginPage = () => {
   const [showeye, setShoweye] = useState(false);
   const initialCredintials = {
@@ -77,6 +79,9 @@ const LoginPage = () => {
       setLoading(false);
     }
   };
+  useEffect(()=>{
+    initializeFireBase()
+  },[])
   return (
     <div className="flex  w-full  px-2 ">
       <Card className="w-full max-w-md backdrop-blur-md h-full  shadow-xl  ">
@@ -126,6 +131,7 @@ const LoginPage = () => {
               </p>
             )}
             <Button variant="outline" className="w-full">
+              <FcGoogle size={20} />
               Google Login
             </Button>
             <Button

@@ -18,6 +18,7 @@ import { ToastContainer, toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { Audio } from "react-loader-spinner";
 import { useLoading } from "@/app/context/loadingContext";
+import { FcGoogle } from "react-icons/fc";
 const SignUp = () => {
   const [showeye, setShoweye] = useState(false);
   const { loading, setLoading } = useLoading();
@@ -157,6 +158,7 @@ const SignUp = () => {
               </p>
             )}
             <Button variant="outline" className="w-full">
+              <FcGoogle size={20} />
               Google Signup
             </Button>
             <Button
