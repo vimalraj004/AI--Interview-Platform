@@ -3,6 +3,7 @@ import { useAuth } from "@/app/context/authContext";
 import { BellRing } from "lucide-react";
 import Image from "next/image";
 import React from "react";
+import LogoutContainer from "./LogoutContainer";
 
 const WelcomeContainer = () => {
   const {userData}=useAuth();
@@ -39,17 +40,7 @@ const WelcomeContainer = () => {
       </div>
 
       {/* Avatar */}
-      <div className="flex justify-center items-center mt-2 md:mt-0">
-        <div className="h-9 w-9 rounded-full bg-blue-500/20 border border-blue-400/30 flex items-center justify-center cursor-pointer">
-          <Image
-            src="/codie_transparent.bdfb741fb8a3211d12e3.png"
-            height={32}
-            width={32}
-            className="rounded-full"
-            alt="USER"
-          />
-        </div>
-      </div>
+        <LogoutContainer />
     </div>
   );
 };

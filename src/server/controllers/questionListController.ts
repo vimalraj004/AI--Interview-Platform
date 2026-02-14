@@ -21,15 +21,20 @@ export const fetchQuestionList = async (body: NewFormData) => {
   });
 
   async function main() {
+  try {
     const completion = await openai.chat.completions.create({
       model: "google/gemma-3-27b-it:free",
       messages: [{ role: "user", content: FINAL_PROMPT }],
     });
-    if (!completion) {
-      throw new httpError("Failed to get QuestionList", 400);
-    }
+
     return completion.choices[0].message.content || "";
+  } catch (error: any) {
+    console.error("OpenAI Error:", error);
+    console.log("check header :",error.headers)
+    throw new httpError("OpenAI request failed", 500);
   }
+}
+
   const rawContent =await main();
    const cleaned = rawContent
     .replace(/```json/g, "")

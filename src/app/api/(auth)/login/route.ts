@@ -33,13 +33,13 @@ try {
         httpOnly:true,
         secure:false,
         sameSite:"strict",
-        maxAge:120
+        maxAge:3600
     })
      response.cookies.set("refreshToken",tokensCreated.refreshToken,{
         httpOnly:true,
         secure:false,
         sameSite:"strict",
-        maxAge:180
+        maxAge:7200
     })
     return response
 } catch (error) {

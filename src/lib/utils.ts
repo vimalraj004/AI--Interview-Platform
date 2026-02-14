@@ -21,7 +21,10 @@ export const commonService = async <TResponse> (
       headers: { "Content-Type": "application/json" },
       withCredentials:true
     });
-    return response.data as TResponse;
+    return{
+      ...response.data,
+      status:response.status
+    }  as TResponse;
   } catch (error: any) {
     if (axios.isAxiosError(error)) {
       throw {
