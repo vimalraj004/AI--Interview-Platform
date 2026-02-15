@@ -7,7 +7,8 @@ export type loginFromError = {
 }
 export interface loginFormDTO{
     email:string,
-    password:string
+    password?:string
+    googleID?:string
 }
 export interface loginrFormResponse {
     status:number,

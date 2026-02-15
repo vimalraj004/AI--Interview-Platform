@@ -6,11 +6,15 @@ const userSchema = new mongoose.Schema({
     },
     password:{
         type:String,
-        required:true
     },
     confirmPassword:{
         type:String,
-        required:true
+    },
+    photoURL:{
+        type:String,
+    },
+    googleID:{
+        type:String
     }
 })
 const user = models.users || model("users",userSchema)

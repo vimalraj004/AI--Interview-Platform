@@ -12,15 +12,23 @@ import {
 import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import { ToastContainer, toast } from "react-toastify";
-import { loginFromError, loginForm, loginrFormResponse } from "@/app/types/loginPage";
+import {
+  loginFromError,
+  loginForm,
+  loginrFormResponse,
+} from "@/app/types/loginPage";
 import { loginSchema } from "@/app/validators/loginAndRegvalidation";
 import { useRouter } from "next/navigation";
 import { Audio } from "react-loader-spinner";
 import { commonService } from "@/lib/utils";
-import { useLoading } from "@/app/context/loadingContext";
 import { initializeFireBase } from "@/firebase/firebase";
 import { FcGoogle } from "react-icons/fc";
+import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { googleUserData } from "@/app/types/signUpPage";
 const LoginPage = () => {
+  const googleSignUpProvide = new GoogleAuthProvider();
+  const [loginLoading, setLoginLoading] = useState(false);
+  const [googleloginLoading, setGoogleLoginLoading] = useState(false);
   const [showeye, setShoweye] = useState(false);
   const initialCredintials = {
     email: "",
@@ -29,7 +37,6 @@ const LoginPage = () => {
   const [userCredentials, setUserCredentials] =
     useState<loginForm>(initialCredintials);
   const [errors, setErrors] = useState<loginFromError>({});
-  const { loading, setLoading } = useLoading();
 
   let navigate = useRouter();
   const setOnInputChnage = (
@@ -49,7 +56,7 @@ const LoginPage = () => {
 
   const login = async (userCredentials: loginForm): Promise<void> => {
     try {
-      setLoading(true);
+      setLoginLoading(true);
       const result = loginSchema.safeParse(userCredentials);
       if (!result.success) {
         const fieldError = result.error.flatten().fieldErrors;
@@ -63,7 +70,7 @@ const LoginPage = () => {
         email: result?.data?.email,
         password: result?.data?.password,
       };
-      const response = await commonService <loginrFormResponse>(
+      const response = await commonService<loginrFormResponse>(
         "/api/login",
         "POST",
         payload,
@@ -76,12 +83,52 @@ const LoginPage = () => {
       console.log(error);
       toast.error(error.message || "Something went wrong");
     } finally {
-      setLoading(false);
+      setLoginLoading(false);
     }
   };
-  useEffect(()=>{
-    initializeFireBase()
-  },[])
+  const sendGoogleDatas = async (user: googleUserData) => {
+    try {
+      let payload = {
+        email: user.email,
+        googleID: user.uid,
+      };
+      console.log(payload,"payload")
+      const response = await commonService<loginrFormResponse>(
+        "/api/login",
+        "POST",
+        payload,
+      );
+      if ((response.status = 200)) {
+        toast.success(response.message);
+        setTimeout(() => {
+          navigate.push("/dashboard");
+        }, 500);
+      }
+    } catch (error: any) {
+      console.error(error);
+      toast.error(error.message || "Something went wrong");
+    } finally {
+      setGoogleLoginLoading(false);
+    }
+  };
+  const loginWithGoogle = async () => {
+    try {
+      setGoogleLoginLoading(true);
+      const auth = getAuth();
+      signInWithPopup(auth, googleSignUpProvide).then((result) => {
+        const user = result.user;
+        console.log(user, "checkthe user");
+        sendGoogleDatas(user);
+      });
+    } catch (error: any) {
+      console.error(error);
+      toast.error(error.message || "Something went wrong");
+    }
+  };
+  useEffect(() => {
+    console.log("hei r u calling1");
+    initializeFireBase();
+  }, []);
   return (
     <div className="flex  w-full  px-2 ">
       <Card className="w-full max-w-md backdrop-blur-md h-full  shadow-xl  ">
@@ -130,9 +177,29 @@ const LoginPage = () => {
                 {errors.email}
               </p>
             )}
-            <Button variant="outline" className="w-full">
-              <FcGoogle size={20} />
-              Google Login
+            <Button
+              variant="outline"
+              className="w-full"
+              type="button"
+              onClick={() => loginWithGoogle()}
+            >
+              {!googleloginLoading ? (
+                <div className="flex gap-1">
+                  <FcGoogle size={20} className="mt-1" />
+                  <span className="text-sm ">Google Login</span>
+                </div>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <Audio
+                    height="30"
+                    width="30"
+                    color="#4fa94d"
+                    ariaLabel="audio-loading"
+                    visible={true}
+                  />
+                  <span className="text-sm text-gray-600">Loading...</span>
+                </div>
+              )}
             </Button>
             <Button
               className="w-full"
@@ -141,7 +208,7 @@ const LoginPage = () => {
                 login(userCredentials);
               }}
             >
-              {!loading ? (
+              {!loginLoading ? (
                 "Login"
               ) : (
                 <div className="flex items-center gap-2">

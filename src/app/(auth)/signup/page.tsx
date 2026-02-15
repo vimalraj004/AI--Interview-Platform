@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/app/components/ui/button";
 import { Input } from "@/app/components/ui/input";
 import {
@@ -11,17 +11,25 @@ import {
 } from "@/app/components/ui/card";
 import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
-import { RegisterDTOResponse, RegisterForm, RegisterFormError } from "@/app/types/signUpPage";
+import {
+  googleUserData,
+  RegisterDTOResponse,
+  RegisterForm,
+  RegisterFormError,
+} from "@/app/types/signUpPage";
 import { registerSchema } from "@/app/validators/loginAndRegvalidation";
 import { commonService } from "@/lib/utils";
 import { ToastContainer, toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { Audio } from "react-loader-spinner";
-import { useLoading } from "@/app/context/loadingContext";
 import { FcGoogle } from "react-icons/fc";
+import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { initializeFireBase } from "@/firebase/firebase";
 const SignUp = () => {
+  const googleSignUpProvide = new GoogleAuthProvider();
   const [showeye, setShoweye] = useState(false);
-  const { loading, setLoading } = useLoading();
+  const [signupLoading,setSignupLoading] = useState(false)
+    const [googlesignupLoading,setGoogleSignupLoading] = useState(false)
   const initialUserAccount = {
     email: "",
     password: "",
@@ -47,7 +55,7 @@ const SignUp = () => {
   };
   const signUp = async (useraccount: RegisterForm): Promise<void> => {
     try {
-      setLoading(true);
+      setSignupLoading(true);
       const result = registerSchema.safeParse(useraccount);
       if (!result.success) {
         const fieldError = result.error.flatten().fieldErrors;
@@ -76,9 +84,52 @@ const SignUp = () => {
       console.error(error);
       toast.error(error.message || "Something went wrong");
     } finally {
-      setLoading(false);
+      setSignupLoading(false);
     }
   };
+  const sendGoogleDatas = async (user: googleUserData) => {
+    try {
+      let payload = {
+        email: user.email,
+        photoURL: user.photoURL,
+        googleID: user.uid,
+      };
+      const response = await commonService<RegisterDTOResponse>(
+        `/api/signup`,
+        "POST",
+        payload,
+      );
+      if ((response.status = 201)) {
+        toast.success(response.message);
+        setTimeout(() => {
+          navigate.push("/dashboard");
+        }, 500);
+      }
+    } catch (error: any) {
+      console.error(error);
+      toast.error(error.message || "Something went wrong");
+    } finally {
+      setGoogleSignupLoading(false);
+    }
+  };
+  const signUPWithGoogle = async () => {
+    try {
+      setGoogleSignupLoading(true);
+      const auth = getAuth();
+      signInWithPopup(auth, googleSignUpProvide).then((result) => {
+        const user = result.user;
+        console.log(user, "checkthe user");
+        sendGoogleDatas(user);
+      });
+    } catch (error: any) {
+      console.error(error);
+      toast.error(error.message || "Something went wrong");
+    }
+  };
+  useEffect(() => {
+    console.log("hei r u calling2");
+    initializeFireBase();
+  }, []);
 
   return (
     <div className="flex  w-full  px-2 ">
@@ -157,16 +208,36 @@ const SignUp = () => {
                 {errors.confirmPassword}
               </p>
             )}
-            <Button variant="outline" className="w-full">
-              <FcGoogle size={20} />
-              Google Signup
+            <Button
+              variant="outline"
+              className="w-full"
+              type="button"
+              onClick={() => signUPWithGoogle()}
+            >
+              {!googlesignupLoading ? (
+                <div className="flex gap-1">
+                  <FcGoogle size={20} className="mt-1" />
+                  <span className="text-sm ">Google Signup</span>
+                </div>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <Audio
+                    height="30"
+                    width="30"
+                    color="#4fa94d"
+                    ariaLabel="audio-loading"
+                    visible={true}
+                  />
+                  <span className="text-sm text-gray-600">Loading...</span>
+                </div>
+              )}
             </Button>
             <Button
               className="w-full"
               type="button"
               onClick={() => signUp(useraccount)}
             >
-              {!loading ? (
+              {!signupLoading ? (
                 "Signup"
               ) : (
                 <div className="flex items-center gap-2">
