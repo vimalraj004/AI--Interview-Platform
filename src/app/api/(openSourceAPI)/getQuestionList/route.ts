@@ -8,7 +8,6 @@ export async function POST(req: NextRequest) {
   try {
     await dbConnect();
     let body = await req.json();
-    console.log(body, "body");
     const result = await questionListService(body)
     return NextResponse.json({message:"QuestionFetched",data:result},{status:200})
   } catch (error:any) {

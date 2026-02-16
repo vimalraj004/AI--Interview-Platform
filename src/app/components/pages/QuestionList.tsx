@@ -1,4 +1,3 @@
-import { useLoading } from '@/app/context/loadingContext'
 import { useGlobalStore } from '@/app/Hooks/useGlobalStore'
 import { FormDataDTOResponse, NewFormData } from '@/app/types/newInterivewFormpage'
 import { question,QuestionResponse } from '@/app/types/questionListPage'
@@ -11,7 +10,7 @@ import { Button } from '../ui/button'
 const QuestionList = () => {
     const formData = useGlobalStore();
     const { jobPosition, jobDescription, duration, interviewTypes } = formData;
-   const {loading,setLoading}= useLoading()
+   const [loading,setLoading]= useState(false);
    const [questionList,setQuestionList]=useState<question[]>([])
     const getQuestions =async (formData:NewFormData) :Promise<void>=>{
       try {
@@ -32,6 +31,19 @@ const QuestionList = () => {
         getQuestions(formData)
       }
     },[jobPosition, jobDescription, duration, interviewTypes])
+    const finish = async()=>{
+      try {
+        let payload = {
+          jobPosition, jobDescription, duration, interviewTypes,questionList
+        }
+        const response = await commonService("/api/saveInterview","POST",payload)
+        console.log(response,"responsefromquestionLIst")
+        
+      } catch (error:any) {
+         toast.error(error.message)
+        console.log(error)
+      }
+    }
   return (
     <div>
       {loading && 
@@ -58,7 +70,7 @@ const QuestionList = () => {
             )
           })}
           <div className=' flex justify-end ju items-end mt-10 '>
-          <Button>Finish</Button>
+          <Button onClick={()=>{finish()}}>Finish</Button>
         </div>
         </div>
         </div>

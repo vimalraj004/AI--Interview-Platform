@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
       console.log(parsedData,"parsedData")
       payload = {
         email: parsedData.data!.email,
-        googleID: parsedData.data?.googleId,
+        googleID: parsedData.data?.googleID,
       };
     } else {
       parsedData = loginSchema.safeParse(body);
