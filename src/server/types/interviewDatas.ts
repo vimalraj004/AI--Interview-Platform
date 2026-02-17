@@ -6,6 +6,6 @@ export interface interviewdatas {
   jobPosition: string;
   jobDescription: string;
   duration: string;
-  jobType: string[];
+  interviewTypes: string[];
     questionList: questionListDatas[];
 }

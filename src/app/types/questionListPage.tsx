@@ -4,8 +4,15 @@ export interface question{
 }
 
 export interface QuestionResponse {
-  message: string;
+  message: string,
   data: {
     interviewQuestions: question[];
-  };
+  },
+  status:number
+}
+
+export interface saveInterviewResponse{
+  message:string,
+  data:string,
+  status:number
 }

@@ -23,7 +23,7 @@ export const fetchQuestionList = async (body: NewFormData) => {
   async function main() {
   try {
     const completion = await openai.chat.completions.create({
-      model: "google/gemma-3-27b-it:free",
+      model: "google/gemma-3n-e4b-it:free",
       messages: [{ role: "user", content: FINAL_PROMPT }],
     });
 

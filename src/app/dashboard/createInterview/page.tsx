@@ -7,11 +7,12 @@ import { Progress } from "@/app/components/ui/progress";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import QuestionList from "@/app/components/pages/QuestionList";
+import InterviewLink from "@/app/components/pages/InterviewLink";
 
 const CreateInterviewPage = () => {
   const router = useRouter();
   const [step,setStep] = useState(1);
-
+  const [interviewLinkId,setInterviewLinkId] = useState("")
   return (
     <div className="w-full">
       {/* Welcome */}
@@ -46,7 +47,9 @@ const CreateInterviewPage = () => {
           {step === 1 ? (
             <FormContainer setStep={setStep} />
           ) : step === 2 ? (
-            <QuestionList />
+            <QuestionList  setStep={setStep} setInterviewLinkId={setInterviewLinkId} />
+          ): step === 3?(
+            <InterviewLink interviewLinkId={interviewLinkId} />
           ) : null}
         </div>
       </div>

@@ -3,7 +3,7 @@ import { object, string, z } from "zod";
 export const interviewdatas = z.object({
   jobPosition: z.string().min(1, "Job position is required"),
 
-  jobDescription: z.string().max(100, "Job description is required"),
+  jobDescription: z.string().min(1, "Job description is required"),
 
   duration: z.string().min(1, "Duration is required"),
 

@@ -9,14 +9,14 @@ export const saveInterviewDatas =async (body:interviewdatas)=>{
       jobPosition,
       duration,
       jobDescription,
-      jobType,
+      interviewTypes,
       questionList,
     } = body;
 const interview = await InterviewData.create({
       jobPosition,
       duration,
       jobDescription,
-      jobType,
+      interviewTypes,
     })
     if(!interview){
         throw new httpError("Failed to create Interview",400)
