@@ -11,7 +11,7 @@ import InterviewLink from "@/app/components/pages/InterviewLink";
 
 const CreateInterviewPage = () => {
   const router = useRouter();
-  const [step,setStep] = useState(1);
+  const [step,setStep] = useState(3);
   const [interviewLinkId,setInterviewLinkId] = useState("")
   return (
     <div className="w-full">
