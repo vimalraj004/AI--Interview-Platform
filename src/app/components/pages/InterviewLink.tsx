@@ -90,7 +90,7 @@ return (
 
           <div className="flex items-center gap-2 justify-center sm:justify-start">
             <Clock className="h-4 w-4" />
-            <span>{duration}</span>
+            <span>{duration} Minutes</span>
           </div>
 
           <div className="flex items-center gap-2 justify-center sm:justify-start">

@@ -13,6 +13,7 @@ const CreateInterviewPage = () => {
   const router = useRouter();
   const [step,setStep] = useState(1);
   const [interviewLinkId,setInterviewLinkId] = useState("")
+  const [fetchQuestions,setFetchQuestions] = useState(false);
   return (
     <div className="w-full">
       {/* Welcome */}
@@ -45,9 +46,9 @@ const CreateInterviewPage = () => {
         {/* Form */}
         <div className="mt-6">
           {step === 1 ? (
-            <FormContainer setStep={setStep} />
+            <FormContainer setStep={setStep} setFetchQuestions={setFetchQuestions} />
           ) : step === 2 ? (
-            <QuestionList  setStep={setStep} setInterviewLinkId={setInterviewLinkId} />
+            <QuestionList  setStep={setStep} setInterviewLinkId={setInterviewLinkId} fetchQuestions={fetchQuestions} setFetchQuestions={setFetchQuestions}/>
           ): step === 3?(
             <InterviewLink interviewLinkId={interviewLinkId} />
           ) : null}

@@ -18,9 +18,11 @@ import { Audio } from "react-loader-spinner";
 interface QuestionListProps {
   setStep: React.Dispatch<React.SetStateAction<number>>;
   setInterviewLinkId: React.Dispatch<React.SetStateAction<string>>;
+  fetchQuestions:boolean;
+  setFetchQuestions:React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const QuestionList = ({ setStep, setInterviewLinkId }: QuestionListProps) => {
+const QuestionList = ({ setStep, setInterviewLinkId,fetchQuestions,setFetchQuestions }: QuestionListProps) => {
   const formData = useGlobalStore();
   const { jobPosition, jobDescription, duration, interviewTypes } = formData;
   const [loading, setLoading] = useState(false);
@@ -47,10 +49,11 @@ const QuestionList = ({ setStep, setInterviewLinkId }: QuestionListProps) => {
     }
   };
   useEffect(() => {
-    if (jobPosition && jobDescription && duration && interviewTypes) {
+    if (fetchQuestions === true) {
       getQuestions(formData);
+      setFetchQuestions(false);
     }
-  }, [jobPosition, jobDescription, duration, interviewTypes]);
+  }, [fetchQuestions]);
   const finish = async () => {
     try {
       setSaveLoading(true);
@@ -84,7 +87,7 @@ const QuestionList = ({ setStep, setInterviewLinkId }: QuestionListProps) => {
         <div className="p-5 bg-blue-100 border border-gray-100 flex items-center gap-5 rounded-xl">
           <Loader2Icon className="animate-spin" />
           <div>
-            <h2 className="font-medium">Generating Interview Questions</h2>
+            <h2 className="font-medium ">Generating Interview Questions</h2>
             <p className="text-primary">
               Our AI is crafting personalized questions based on your job
               position
@@ -94,8 +97,8 @@ const QuestionList = ({ setStep, setInterviewLinkId }: QuestionListProps) => {
       )}
       {questionList.length > 0 && (
         <div>
-          <h2 className="font-bold text-lg mb-5">
-            Generate Interview Questoins:
+          <h2 className="font-bold text-lg mb-5 text-white">
+            Generated Interview Questions:
           </h2>
           <div className=" p-5 border border-gray-50 rounded-xl bg-white">
             {questionList.map((item, index) => {

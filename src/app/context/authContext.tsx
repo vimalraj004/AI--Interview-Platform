@@ -37,7 +37,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }
   useEffect(()=>{
-    if(pathname === "/dashboard"){
+    if(pathname.startsWith("/dashboard")){
         getUserData()
     }
   },[pathname])

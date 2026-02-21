@@ -21,8 +21,9 @@ import { FormDataStore } from "@/app/Hooks/FormDataStore";
 interface FormContainerProps{
 // children:React.ReactNode
 setStep :React.Dispatch<React.SetStateAction<number>>
+setFetchQuestions:React.Dispatch<React.SetStateAction<boolean>>
 }
-const FormContainer = ({setStep}:FormContainerProps) => {
+const FormContainer = ({setStep,setFetchQuestions}:FormContainerProps) => {
 
   const formData = useGlobalStore()
   const handleAnswerChange=(field:keyof NewFormData ,e:NewFormDataEvent):void=>{
@@ -109,7 +110,10 @@ const FormContainer = ({setStep}:FormContainerProps) => {
 
       {/* CTA */}
       <div className="flex justify-end pt-4">
-        <Button className="w-full sm:w-auto gap-2" onClick={()=>setStep((prev)=>prev+1)}>
+        <Button className="w-full sm:w-auto gap-2" onClick={()=>{
+          setStep((prev)=>prev+1)
+          setFetchQuestions(true)
+        }}>
           Generate Questions <ArrowRight size={16} />
         </Button>
       </div>
