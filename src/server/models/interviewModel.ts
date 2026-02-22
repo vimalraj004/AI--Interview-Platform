@@ -19,7 +19,9 @@ const interviewSchema = new mongoose.Schema({
       },
   
 },
-    {timestamps:true})
+    {timestamps:true,
+      id:false
+    })
 interviewSchema.virtual("questionList",{
     ref:"Question",
     localField:"_id",

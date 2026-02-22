@@ -34,3 +34,9 @@ const interview = await InterviewData.create({
     return interview._id
 
 }
+
+export const fetchInterviewDatas =async(interviewID:string)=>{
+    const data = await InterviewData.findById(interviewID).select("jobPosition duration").lean();
+    console.log(data,"check this data")
+    return data
+}

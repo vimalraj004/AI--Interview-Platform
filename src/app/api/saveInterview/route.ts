@@ -1,7 +1,7 @@
 import { interviewdatas } from "@/app/validators/saveInterviews";
 import { httpError } from "@/errors/http.erros";
 import { dbConnect } from "@/server/lib/db";
-import { saveInterviewService } from "@/server/services/createInterviewPage";
+import { saveInterviewService } from "@/server/services/interviewPage";
 import { NextRequest, NextResponse } from "next/server";
 
 export  async function POST(req:NextRequest) {
