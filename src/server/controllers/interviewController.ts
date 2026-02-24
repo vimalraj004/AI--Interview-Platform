@@ -36,7 +36,7 @@ const interview = await InterviewData.create({
 }
 
 export const fetchInterviewDatas =async(interviewID:string)=>{
-    const data = await InterviewData.findById(interviewID).select("jobPosition duration").lean();
+    const data = await InterviewData.findById(interviewID).select("-_id jobPosition duration -interviewTypes ").populate({path:"questionList",select:"-_id question type -interviewID"}).lean();
     console.log(data,"check this data")
     return data
 }

@@ -6,7 +6,7 @@ import { Input } from "@/app/components/ui/input";
 import { Briefcase, Clock, Info, Video } from "lucide-react";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { commonService } from "@/lib/utils";
 import { useAuth } from "@/app/context/authContext";
@@ -18,19 +18,23 @@ import { nullable } from "zod";
 import { Audio } from "react-loader-spinner";
 
 export default function InterviewPage() {
+  const navigate  = useRouter();
   const { interview_id } = useParams();
-  console.log(interview_id, "checkinterviewID");
   const [loading, setLoading] = useState(false);
   const initialInterviewData = {
-    _id: "",
+    // _id: "",
     jobPosition: "",
     duration: "",
     userName: "",
+    // interviewTypes:[],
+    questionList:[],
   };
   const [interviewData, setInterviewData] =
     useState<responseData>(initialInterviewData);
   const getInterviewData = async () => {
     try {
+            setLoading(true);
+
       const result = await commonService<fetchInterviewDataResponse>(
         `/api/fetchInterviewData?interview_id=${interview_id}`,
         "GET",
@@ -39,6 +43,8 @@ export default function InterviewPage() {
       setInterviewData(result.data);
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
   useEffect(() => {
@@ -56,12 +62,9 @@ export default function InterviewPage() {
   };
   const startInterview = () => {
     try {
-      console.log("r u comming here");
-      setLoading(true);
+      navigate.push(`/dashboard/interview/`+`${interview_id}`+"/start")
     } catch (error) {
       console.log(error);
-    } finally {
-      setLoading(false);
     }
   };
   return (

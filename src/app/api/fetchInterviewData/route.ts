@@ -1,9 +1,11 @@
 import { httpError } from "@/errors/http.erros";
+import { dbConnect } from "@/server/lib/db";
 import { fetchInterviewService } from "@/server/services/interviewPage";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET (req:NextRequest){
     try {
+        await dbConnect();
         const interviewID =  req.nextUrl.searchParams.get("interview_id")
         console.log(interviewID,"checkfthisinterviewID")
         if(!interviewID){

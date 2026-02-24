@@ -23,7 +23,7 @@ const interviewSchema = new mongoose.Schema({
       id:false
     })
 interviewSchema.virtual("questionList",{
-    ref:"Question",
+    ref:"Questions",
     localField:"_id",
     foreignField:"interviewID"
 })

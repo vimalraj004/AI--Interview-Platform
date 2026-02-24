@@ -1,8 +1,16 @@
+export interface questionListRespone{
+    question:string,
+    type:string,
+    // _id:string
+}
+
 export interface responseData{
     jobPosition:string,
     duration:string,
-    _id:string,
-    userName:string
+    // _id:string,
+    userName:string,
+    // interviewTypes:string[],
+    questionList:questionListRespone[]
 }
 
 export interface fetchInterviewDataResponse {
