@@ -9,28 +9,19 @@ import { motion } from "framer-motion";
 import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { commonService } from "@/lib/utils";
-import { useAuth } from "@/app/context/authContext";
 import {
   fetchInterviewDataResponse,
   responseData,
 } from "@/app/types/interviewPage";
 import { nullable } from "zod";
 import { Audio } from "react-loader-spinner";
+import { useInterviewData } from "@/app/context/interviewDataContext";
 
 export default function InterviewPage() {
   const navigate  = useRouter();
   const { interview_id } = useParams();
   const [loading, setLoading] = useState(false);
-  const initialInterviewData = {
-    // _id: "",
-    jobPosition: "",
-    duration: "",
-    userName: "",
-    // interviewTypes:[],
-    questionList:[],
-  };
-  const [interviewData, setInterviewData] =
-    useState<responseData>(initialInterviewData);
+  const{interviewData,setInterviewData}= useInterviewData()
   const getInterviewData = async () => {
     try {
             setLoading(true);
