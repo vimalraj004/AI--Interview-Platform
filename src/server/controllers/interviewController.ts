@@ -36,7 +36,30 @@ const interview = await InterviewData.create({
 }
 
 export const fetchInterviewDatas =async(interviewID:string)=>{
-    const data = await InterviewData.findById(interviewID).select("-_id jobPosition duration -interviewTypes ").populate({path:"questionList",select:"-_id question type -interviewID"}).lean();
-    console.log(data,"check this data")
-    return data
+  const data = await InterviewData
+  .findById(interviewID)
+  .populate("questionList")
+  .lean();
+
+console.log(data, "check this data");
+
+if (!data) {
+ throw new httpError("Invalid interviewID",400)}
+
+const { jobPosition, duration, questionList } = data;
+
+const cleanData = questionList.map(({ question, type }:{question:string,type:string}) => ({
+  question,
+  type
+}));
+
+const responseData = {
+  jobPosition,
+  duration,
+  questionList: cleanData
+};
+
+console.log(responseData, "responseData");
+
+return responseData; 
 }

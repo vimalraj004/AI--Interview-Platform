@@ -1,3 +1,5 @@
+"use client"
+
 import { responseData } from "../types/interviewPage";
 import React, { createContext, useContext, useState } from "react";
 

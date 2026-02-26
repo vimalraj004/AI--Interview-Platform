@@ -6,6 +6,7 @@ import {
   SidebarInset,
 } from "@/app/components/ui/sidebar";
 import { AppSidebar } from "@/app/components/pages/app-sidebar";
+import { InterviewDataProvider } from "../context/interviewDataContext";
 
 export default function DashboardLayout({
   children,
@@ -17,7 +18,9 @@ export default function DashboardLayout({
       <AppSidebar />
       <main className=" bg-auth-gradient w-full min-h-screen flex">
         <SidebarTrigger className="text-white" />
-        {children}
+        <InterviewDataProvider>
+                  {children}
+        </InterviewDataProvider>
       </main>
     </SidebarProvider>
   );
