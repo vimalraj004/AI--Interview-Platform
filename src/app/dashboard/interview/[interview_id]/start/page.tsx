@@ -101,7 +101,7 @@ const StartInterview = () => {
         </div>
 
         <p className="text-blue-200 text-sm mt-4">
-          Interview in progress...
+          Interview in progress....
         </p>
       </div>
     </div>
