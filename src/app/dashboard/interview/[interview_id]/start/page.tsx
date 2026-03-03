@@ -63,15 +63,15 @@ useEffect(() => {
       const assistantOptions: CreateAssistantDTO = {
         name: "AI Recruiter",
         firstMessage: `Hi ${interviewData.userName}, how are you? Ready for your interview on ${interviewData.jobPosition}?`,
-        transcriber: {
-          provider: "deepgram",
-          model: "nova-2",
-          language: "en-US",
-        },
-        voice: {
-          provider: "playht",
-          voiceId: "jennifer",
-        },
+        // transcriber: {
+        //   provider: "deepgram",
+        //   model: "nova-2",
+        //   language: "en-US",
+        // },
+        // voice: {
+        //   provider: "playht",
+        //   voiceId: "jennifer",
+        // },
         model: {
           provider: "openai",
           model: "gpt-4",
