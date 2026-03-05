@@ -118,7 +118,7 @@ Ensure the interview remains focused on React
 
         <div className="flex items-center gap-2 text-sm md:text-base text-blue-300">
           <Timer size={18} />
-          <span>00:00:00</span>
+          <span>00:00:01</span>
         </div>
       </div>
 
