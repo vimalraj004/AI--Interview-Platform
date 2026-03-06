@@ -3,7 +3,7 @@
 import { useInterviewData } from "@/app/context/interviewDataContext";
 import { Mic, PhoneOff, Video, Timer } from "lucide-react";
 import Image from "next/image";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Vapi from "@vapi-ai/web";
 import { questionListRespone } from "@/app/types/interviewPage";
 import { CreateAssistantDTO } from "@vapi-ai/web/dist/api";
@@ -24,6 +24,7 @@ const StartInterview = () => {
   console.log(interviewData, "interviewData");
 const vapiRef = useRef<Vapi | null>(null);
 const hasStartedRef = useRef(false);
+const [activeUser,setActiveUser] = useState(false)
 
 useEffect(() => {
   if (!vapiRef.current) {
@@ -32,6 +33,18 @@ useEffect(() => {
     vapiRef.current.on("error", (err) => {
       console.log("Vapi error:", err);
     });
+
+    vapiRef.current.on("call-start",()=>{
+      console.log("call has started")
+    })
+    vapiRef.current.on("speech-start",()=>{
+      console.log("Assistant speech has started")
+      setActiveUser(false);
+    })
+    vapiRef.current.on("speech-end",()=>{
+      console.log("Assistant speech has ended ")
+      setActiveUser(true);
+    })
 
     vapiRef.current.on("call-end", () => {
       console.log("Call ended properly");
@@ -118,7 +131,7 @@ Ensure the interview remains focused on React
 
         <div className="flex items-center gap-2 text-sm md:text-base text-blue-300">
           <Timer size={18} />
-          <span>00:00:01</span>
+          <span>00:00:00</span>
         </div>
       </div>
 
