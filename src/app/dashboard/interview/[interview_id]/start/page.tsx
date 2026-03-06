@@ -18,45 +18,47 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-
+import { ToastContainer, toast } from "react-toastify";
 const StartInterview = () => {
   const { interviewData } = useInterviewData();
   console.log(interviewData, "interviewData");
-const vapiRef = useRef<Vapi | null>(null);
-const hasStartedRef = useRef(false);
-const [activeUser,setActiveUser] = useState(false)
+  const vapiRef = useRef<Vapi | null>(null);
+  const hasStartedRef = useRef(false);
+  const [activeUser, setActiveUser] = useState(false);
 
-useEffect(() => {
-  if (!vapiRef.current) {
-    vapiRef.current = new Vapi(process.env.NEXT_PUBLIC_VAPI_API_KEY!);
+  useEffect(() => {
+    if (!vapiRef.current) {
+      vapiRef.current = new Vapi(process.env.NEXT_PUBLIC_VAPI_API_KEY!);
 
-    vapiRef.current.on("error", (err) => {
-      console.log("Vapi error:", err);
-    });
+      vapiRef.current.on("error", (err) => {
+        console.log("Vapi error:", err);
+      });
 
-    vapiRef.current.on("call-start",()=>{
-      console.log("call has started")
-    })
-    vapiRef.current.on("speech-start",()=>{
-      console.log("Assistant speech has started")
-      setActiveUser(false);
-    })
-    vapiRef.current.on("speech-end",()=>{
-      console.log("Assistant speech has ended ")
-      setActiveUser(true);
-    })
+      vapiRef.current.on("call-start", () => {
+        console.log("call has started");
+        toast.success("Call Connected")
+        
+      });
+      vapiRef.current.on("speech-start", () => {
+        console.log("Assistant speech has started");
+        setActiveUser(false);
+      });
+      vapiRef.current.on("speech-end", () => {
+        console.log("Assistant speech has ended ");
+        setActiveUser(true);
+      });
 
-    vapiRef.current.on("call-end", () => {
-      console.log("Call ended properly");
-    });
-  }
+      vapiRef.current.on("call-end", () => {
+        console.log("Call ended properly");
+        toast.error("Interview Stoped")
+      });
+    }
 
-  if (interviewData && !hasStartedRef.current) {
-    hasStartedRef.current = true;
-   startCall();
-  }
-
-}, [interviewData]);
+    if (interviewData && !hasStartedRef.current) {
+      hasStartedRef.current = true;
+      startCall();
+    }
+  }, [interviewData]);
 
   const combineAllQuestionsIntoString = (
     questionList: questionListRespone[],
@@ -154,7 +156,8 @@ Ensure the interview remains focused on React
                 alt="AI Interviewer"
                 width={140}
                 height={140}
-                className="rounded-full border-4 border-blue-400 shadow-lg"
+                className={`rounded-full border-4 border-blue-400 shadow-lg transition-all duration-300
+  ${!activeUser ? "animate-pulse shadow-[0_0_25px_rgba(96,165,250,0.9)]" : ""}`}
               />
             </div>
 
@@ -180,7 +183,8 @@ Ensure the interview remains focused on React
             alt="User"
             width={70}
             height={70}
-            className="rounded-full border-2 border-blue-300"
+            className={`rounded-full border-2 border-blue-300 
+  ${activeUser ? "animate-pulse shadow-[0_0_12px_rgba(147,197,253,0.9)]" : ""}`}
           />
 
           <p className="text-xs md:text-sm mt-2 text-blue-200">
