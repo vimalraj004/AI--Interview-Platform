@@ -71,3 +71,4 @@ format: interviewQuestions = [
 ]
 
 🎯 The goal is to create a structured, relevant, and time-optimized interview plan for a {{jobTitle}} role.`;
+

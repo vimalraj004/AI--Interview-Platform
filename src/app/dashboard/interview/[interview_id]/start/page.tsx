@@ -19,45 +19,97 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { ToastContainer, toast } from "react-toastify";
+import user from "@/server/models/userModel";
 const StartInterview = () => {
   const { interviewData } = useInterviewData();
   console.log(interviewData, "interviewData");
   const vapiRef = useRef<Vapi | null>(null);
   const hasStartedRef = useRef(false);
   const [activeUser, setActiveUser] = useState(false);
+  const [elapsedTime, setElapsedTime] = useState(0);
+  const timeRef = useRef<NodeJS.Timeout | null>(null);
+
+  const formatTime = (seconds: number) => {
+    const hrs = Math.floor(seconds / 3600);
+    const mins = Math.floor((seconds % 3600) / 60);
+    const secs = seconds % 60;
+    return `${hrs.toString().padStart(2, "0")}:${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+  };
+
+  const handleError = (err: any) => {
+    console.log("Vapi error:", err);
+  };
+  const handleCallStart = () => {
+    console.log("call has started");
+    toast.success("Call Connected");
+    setElapsedTime(0);
+    const durationInMinutes = Number(interviewData.duration) || 0;
+    const durationInSeconds = durationInMinutes * 60;
+
+    timeRef.current = setInterval(() => {
+      setElapsedTime((prev) => {
+        const newTime = prev + 1;
+
+        // show warning 1 minute beofore end
+        if (newTime === durationInSeconds - 60) {
+          toast.warn("Only 1 Minute Left");
+        }
+        // stop when time is up
+        if (newTime >= durationInSeconds) {
+          toast.error("Time is Up! Ending Interview");
+          vapiRef.current?.stop();
+          if (timeRef.current) {
+            clearInterval(timeRef.current);
+          }
+        }
+        return newTime;
+      });
+    }, 1000);
+  };
+  const handleSpeechStart = () => {
+    console.log("Assistant speech has started");
+    setActiveUser(false);
+  };
+  const handleSpeechEnd = () => {
+    console.log("Assistant speech has ended ");
+    setActiveUser(true);
+  };
+  const handleCallEnd = () => {
+    console.log("Call ended properly");
+    toast.error("Interview Stoped");
+        if (timeRef.current) {
+      clearInterval(timeRef.current);
+    }
+  };
 
   useEffect(() => {
     if (!vapiRef.current) {
       vapiRef.current = new Vapi(process.env.NEXT_PUBLIC_VAPI_API_KEY!);
 
-      vapiRef.current.on("error", (err) => {
-        console.log("Vapi error:", err);
-      });
-
-      vapiRef.current.on("call-start", () => {
-        console.log("call has started");
-        toast.success("Call Connected")
-        
-      });
-      vapiRef.current.on("speech-start", () => {
-        console.log("Assistant speech has started");
-        setActiveUser(false);
-      });
-      vapiRef.current.on("speech-end", () => {
-        console.log("Assistant speech has ended ");
-        setActiveUser(true);
-      });
-
-      vapiRef.current.on("call-end", () => {
-        console.log("Call ended properly");
-        toast.error("Interview Stoped")
-      });
+      vapiRef.current.on("error", handleError);
+      vapiRef.current.on("call-start", handleCallStart);
+      vapiRef.current.on("speech-start", handleSpeechStart);
+      vapiRef.current.on("speech-end", handleSpeechEnd);
+      vapiRef.current.on("call-end", handleCallEnd);
+      vapiRef.current.on("message",(message)=>{
+        console.log("Received message:", message);
+      })
     }
 
     if (interviewData && !hasStartedRef.current) {
       hasStartedRef.current = true;
       startCall();
     }
+
+    return () => {
+      if (vapiRef.current) {
+        vapiRef.current.off("error", handleError);
+        vapiRef.current.off("call-start", handleCallStart);
+        vapiRef.current.off("speech-start", handleSpeechStart);
+        vapiRef.current.off("speech-end", handleSpeechEnd);
+        vapiRef.current.off("call-end", handleCallEnd);
+      }
+    };
   }, [interviewData]);
 
   const combineAllQuestionsIntoString = (
@@ -123,6 +175,9 @@ Ensure the interview remains focused on React
       await vapiRef.current?.start(assistantOptions);
     }
   };
+  const getFeedBack = ()=>{
+
+  }
   return (
     <div className="min-h-screen w-full bg-auth-gradient text-white flex flex-col">
       {/* Header */}
@@ -133,7 +188,7 @@ Ensure the interview remains focused on React
 
         <div className="flex items-center gap-2 text-sm md:text-base text-blue-300">
           <Timer size={18} />
-          <span>00:00:00</span>
+          <span>{formatTime(elapsedTime)}</span>
         </div>
       </div>
 
@@ -224,7 +279,15 @@ Ensure the interview remains focused on React
 
                 <AlertDialogFooter>
                   <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction onClick={() => vapiRef.current?.stop()}>
+                  <AlertDialogAction
+                    onClick={() => {
+                      vapiRef.current?.stop();
+                      setElapsedTime(0);
+                      if (timeRef.current) {
+                        clearInterval(timeRef.current);
+                      }
+                    }}
+                  >
                     Continue
                   </AlertDialogAction>
                 </AlertDialogFooter>
@@ -239,6 +302,7 @@ Ensure the interview remains focused on React
 
         <p className="text-blue-200 text-sm mt-4">Interview in progress....</p>
       </div>
+      <ToastContainer />
     </div>
   );
 };
