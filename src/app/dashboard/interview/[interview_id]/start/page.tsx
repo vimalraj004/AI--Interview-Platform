@@ -1,7 +1,7 @@
 "use client";
 
 import { useInterviewData } from "@/app/context/interviewDataContext";
-import { Mic, PhoneOff, Video, Timer } from "lucide-react";
+import { Mic, PhoneOff, Video, Timer, VideoOff, MicOff } from "lucide-react";
 import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
 import Vapi from "@vapi-ai/web";
@@ -19,15 +19,27 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { ToastContainer, toast } from "react-toastify";
-import user from "@/server/models/userModel";
+import {
+  conversationItem,
+  isConversationUpdateMessage,
+  vapiMessageEvent,
+} from "@/app/types/interviewStartPage";
+import ConversationContainer from "@/app/components/pages/ConversationContainer";
 const StartInterview = () => {
   const { interviewData } = useInterviewData();
-  console.log(interviewData, "interviewData");
+  // console.log(interviewData, "interviewData");
   const vapiRef = useRef<Vapi | null>(null);
   const hasStartedRef = useRef(false);
   const [activeUser, setActiveUser] = useState(false);
   const [elapsedTime, setElapsedTime] = useState(0);
   const timeRef = useRef<NodeJS.Timeout | null>(null);
+  const [allConversation, setAllConversation] = useState<conversationItem[]>(
+    [],
+  );
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const streamRef = useRef<MediaStream | null>(null);
+  const [cameraOn, setCameraOn] = useState(false);
+  const [micOn, setMicOn] = useState(false);
 
   const formatTime = (seconds: number) => {
     const hrs = Math.floor(seconds / 3600);
@@ -36,6 +48,31 @@ const StartInterview = () => {
     return `${hrs.toString().padStart(2, "0")}:${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
   };
 
+  const startMedia = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: true,
+      });
+      streamRef.current = stream;
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+      }
+      setCameraOn(true);
+      setMicOn(true);
+    } catch (error) {
+      console.log("permission denied:", error);
+      toast.error("Permission denied for camera/mic");
+    }
+  };
+  useEffect(() => {
+    startMedia();
+  }, []);
+  useEffect(() => {
+    if (videoRef.current && streamRef.current) {
+      videoRef.current.srcObject = streamRef.current;
+    }
+  }, [cameraOn]);
   const handleError = (err: any) => {
     console.log("Vapi error:", err);
   };
@@ -77,11 +114,42 @@ const StartInterview = () => {
   const handleCallEnd = () => {
     console.log("Call ended properly");
     toast.error("Interview Stoped");
-        if (timeRef.current) {
+    if (timeRef.current) {
       clearInterval(timeRef.current);
     }
   };
-
+  const handleMessage = (message: vapiMessageEvent) => {
+    console.log("Received message:", message);
+    if (!isConversationUpdateMessage(message)) return;
+    if (
+      message.type === "conversation-update" &&
+      Array.isArray(message.conversation)
+    ) {
+      setAllConversation(message.conversation);
+    }
+  };
+  const handleMic = () => {
+    if (!streamRef.current) return;
+    streamRef.current.getAudioTracks().forEach((track) => {
+      track.enabled = !micOn;
+    });
+    setMicOn(!micOn);
+  };
+  const handleCamera = () => {
+    if (!streamRef.current) return;
+    streamRef.current.getVideoTracks().forEach((track) => {
+      track.enabled = !cameraOn;
+    });
+    setCameraOn(!cameraOn);
+  };
+  const handlestop = () => {
+    vapiRef.current?.stop();
+    streamRef.current?.getTracks().forEach((track) => track.stop());
+    setElapsedTime(0);
+    if (timeRef.current) {
+      clearInterval(timeRef.current);
+    }
+  };
   useEffect(() => {
     if (!vapiRef.current) {
       vapiRef.current = new Vapi(process.env.NEXT_PUBLIC_VAPI_API_KEY!);
@@ -91,9 +159,7 @@ const StartInterview = () => {
       vapiRef.current.on("speech-start", handleSpeechStart);
       vapiRef.current.on("speech-end", handleSpeechEnd);
       vapiRef.current.on("call-end", handleCallEnd);
-      vapiRef.current.on("message",(message)=>{
-        console.log("Received message:", message);
-      })
+      vapiRef.current.on("message", handleMessage);
     }
 
     if (interviewData && !hasStartedRef.current) {
@@ -108,6 +174,7 @@ const StartInterview = () => {
         vapiRef.current.off("speech-start", handleSpeechStart);
         vapiRef.current.off("speech-end", handleSpeechEnd);
         vapiRef.current.off("call-end", handleCallEnd);
+        vapiRef.current.off("message", handleMessage);
       }
     };
   }, [interviewData]);
@@ -175,9 +242,7 @@ Ensure the interview remains focused on React
       await vapiRef.current?.start(assistantOptions);
     }
   };
-  const getFeedBack = ()=>{
-
-  }
+  const getFeedBack = () => {};
   return (
     <div className="min-h-screen w-full bg-auth-gradient text-white flex flex-col">
       {/* Header */}
@@ -193,26 +258,32 @@ Ensure the interview remains focused on React
       </div>
 
       {/* Main Video Section */}
-      <div className="flex-1 flex items-center justify-center p-4 md:p-8 relative">
-        {/* Glass Main Panel */}
-        <div
-          className="w-full max-w-6xl h-[55vh] md:h-[70vh] 
-                        bg-white/5 
-                        backdrop-blur-2xl 
-                        border border-white/10 
-                        rounded-3xl 
-                        shadow-2xl 
-                        flex items-center justify-center relative"
-        >
-          <div className="flex flex-col items-center">
-            <div className="p-1 rounded-full bg-blue-500/20">
+      <div className="flex-1 flex flex-col lg:flex-row p-4 md:p-6 gap-4">
+        {/* Video Section */}
+        <div className="flex-1 flex items-center justify-center relative">
+          <div className="flex flex-col items-center relative">
+            {/* Glow Ring */}
+            {!activeUser && (
+              <div className="absolute -z-10 w-[170px] h-[170px] rounded-full animate-ping bg-blue-400/30 blur-2xl"></div>
+            )}
+
+            {/* AI Avatar */}
+            <div
+              className={`
+    p-1 rounded-full bg-blue-500/20 relative
+    ${!activeUser ? "shadow-[0_0_40px_rgba(96,165,250,0.8)]" : ""}
+    `}
+            >
               <Image
                 src="/ai-generated-female-journalist-holding-microphone-transparent-background-ai-png.webp"
                 alt="AI Interviewer"
                 width={140}
                 height={140}
-                className={`rounded-full border-4 border-blue-400 shadow-lg transition-all duration-300
-  ${!activeUser ? "animate-pulse shadow-[0_0_25px_rgba(96,165,250,0.9)]" : ""}`}
+                className={`
+      rounded-full border-4 border-blue-400
+      transition-all duration-300
+      ${!activeUser ? "animate-pulse scale-105" : ""}
+      `}
               />
             </div>
 
@@ -220,31 +291,49 @@ Ensure the interview remains focused on React
               AI Interviewer
             </p>
           </div>
+
+          {/* Floating User Panel */}
+          <div
+            className="absolute bottom-6 right-6 
+  w-28 h-36 md:w-40 md:h-48 
+  bg-white/5 
+  backdrop-blur-xl 
+  border border-white/10 
+  rounded-2xl 
+  shadow-xl 
+  flex flex-col items-center justify-center"
+          >
+            {/* CAMERA ON → SHOW VIDEO */}
+            {cameraOn ? (
+              <video
+                ref={videoRef}
+                autoPlay
+                muted
+                playsInline
+                className={`rounded-full w-[70px] h-[70px] object-cover border-2 border-blue-300
+      ${activeUser ? "animate-pulse shadow-[0_0_12px_rgba(147,197,253,0.9)]" : ""}`}
+              />
+            ) : (
+              /* CAMERA OFF → SHOW IMAGE */
+              <Image
+                src="/ai-generated-female-journalist-holding-microphone-transparent-background-ai-png.webp"
+                alt="User"
+                width={70}
+                height={70}
+                className={`rounded-full border-2 border-blue-300
+      ${activeUser ? "animate-pulse shadow-[0_0_12px_rgba(147,197,253,0.9)]" : ""}`}
+              />
+            )}
+
+            <p className="text-xs md:text-sm mt-2 text-blue-200">
+              {interviewData?.userName || "You"}
+            </p>
+          </div>
         </div>
 
-        {/* Floating User Panel */}
-        <div
-          className="absolute bottom-6 right-6 
-                        w-28 h-36 md:w-44 md:h-52 
-                        bg-white/5 
-                        backdrop-blur-xl 
-                        border border-white/10 
-                        rounded-2xl 
-                        shadow-xl 
-                        flex flex-col items-center justify-center"
-        >
-          <Image
-            src="/ai-generated-female-journalist-holding-microphone-transparent-background-ai-png.webp"
-            alt="User"
-            width={70}
-            height={70}
-            className={`rounded-full border-2 border-blue-300 
-  ${activeUser ? "animate-pulse shadow-[0_0_12px_rgba(147,197,253,0.9)]" : ""}`}
-          />
-
-          <p className="text-xs md:text-sm mt-2 text-blue-200">
-            {interviewData?.userName || "You"}
-          </p>
+        {/* Conversation Panel */}
+        <div className="w-full lg:w-[380px] xl:w-[420px]">
+          <ConversationContainer allConversation={allConversation} />
         </div>
       </div>
 
@@ -260,7 +349,11 @@ Ensure the interview remains focused on React
                         shadow-xl"
         >
           <button className="p-4 rounded-full bg-blue-500/20 hover:bg-blue-500/30 transition">
-            <Mic className="text-blue-200" />
+            {micOn ? (
+              <Mic className="text-blue-200" onClick={handleMic} />
+            ) : (
+              <MicOff className="text-blue-200" onClick={handleMic} />
+            )}
           </button>
 
           <button className="p-5 rounded-full bg-red-600 hover:bg-red-500 transition shadow-lg">
@@ -281,11 +374,7 @@ Ensure the interview remains focused on React
                   <AlertDialogCancel>Cancel</AlertDialogCancel>
                   <AlertDialogAction
                     onClick={() => {
-                      vapiRef.current?.stop();
-                      setElapsedTime(0);
-                      if (timeRef.current) {
-                        clearInterval(timeRef.current);
-                      }
+                      handlestop();
                     }}
                   >
                     Continue
@@ -296,7 +385,11 @@ Ensure the interview remains focused on React
           </button>
 
           <button className="p-4 rounded-full bg-blue-500/20 hover:bg-blue-500/30 transition">
-            <Video className="text-blue-200" />
+            {cameraOn ? (
+              <Video className="text-blue-200" onClick={handleCamera} />
+            ) : (
+              <VideoOff className="text-blue-200" onClick={handleCamera} />
+            )}
           </button>
         </div>
 
