@@ -25,9 +25,13 @@ import {
   vapiMessageEvent,
 } from "@/app/types/interviewStartPage";
 import ConversationContainer from "@/app/components/pages/ConversationContainer";
+import { commonService } from "@/lib/utils";
+import { useParams } from "next/navigation";
 const StartInterview = () => {
   const { interviewData } = useInterviewData();
-  // console.log(interviewData, "interviewData");
+  console.log(interviewData, "interviewData");
+  const { interview_id } = useParams();
+  console.log(interview_id, "interviewId");
   const vapiRef = useRef<Vapi | null>(null);
   const hasStartedRef = useRef(false);
   const [activeUser, setActiveUser] = useState(false);
@@ -111,12 +115,13 @@ const StartInterview = () => {
     console.log("Assistant speech has ended ");
     setActiveUser(true);
   };
-  const handleCallEnd = () => {
+  const handleCallEnd = async () => {
     console.log("Call ended properly");
     toast.error("Interview Stoped");
     if (timeRef.current) {
       clearInterval(timeRef.current);
     }
+    await getFeedBack();
   };
   const handleMessage = (message: vapiMessageEvent) => {
     console.log("Received message:", message);
@@ -142,13 +147,14 @@ const StartInterview = () => {
     });
     setCameraOn(!cameraOn);
   };
-  const handlestop = () => {
+  const handlestop = async () => {
     vapiRef.current?.stop();
     streamRef.current?.getTracks().forEach((track) => track.stop());
     setElapsedTime(0);
     if (timeRef.current) {
       clearInterval(timeRef.current);
     }
+    await getFeedBack();
   };
   useEffect(() => {
     if (!vapiRef.current) {
@@ -242,7 +248,25 @@ Ensure the interview remains focused on React
       await vapiRef.current?.start(assistantOptions);
     }
   };
-  const getFeedBack = () => {};
+
+  const getFeedBack = async () => {
+    try {
+      let payload = {
+        userName: interviewData?.userName,
+        interview_id: interview_id,
+      };
+      const result = await commonService(
+        "/api/interviewFeedback",
+        "POST",
+        payload,
+      );
+      console.log(result, "feedback result");
+      toast.success("Feedback Submitted");
+    } catch (error) {
+      console.log(error, "feedback error");
+      toast.error("Failed to submit feedback");
+    }
+  };
   return (
     <div className="min-h-screen w-full bg-auth-gradient text-white flex flex-col">
       {/* Header */}
