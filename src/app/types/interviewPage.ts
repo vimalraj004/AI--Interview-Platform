@@ -18,3 +18,9 @@ message:string,
 data:responseData
 status:number
 }
+
+export interface feedbackDatasResponse{
+    message:string,
+    feedback:String,
+    status:number
+}

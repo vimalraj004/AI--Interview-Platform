@@ -5,7 +5,7 @@ import { Mic, PhoneOff, Video, Timer, VideoOff, MicOff } from "lucide-react";
 import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
 import Vapi from "@vapi-ai/web";
-import { questionListRespone } from "@/app/types/interviewPage";
+import { feedbackDatasResponse, questionListRespone } from "@/app/types/interviewPage";
 import { CreateAssistantDTO } from "@vapi-ai/web/dist/api";
 import { AlertDialog } from "@radix-ui/react-alert-dialog";
 import {
@@ -253,15 +253,20 @@ Ensure the interview remains focused on React
     try {
       let payload = {
         userName: interviewData?.userName,
-        interview_id: interview_id,
+        interviewID: interview_id,
+        allConversation
       };
-      const result = await commonService(
+      const result = await commonService<feedbackDatasResponse>(
         "/api/interviewFeedback",
         "POST",
         payload,
       );
       console.log(result, "feedback result");
-      toast.success("Feedback Submitted");
+      if(result.status === 200){
+        toast.success("Feedback Submitted");
+      } else{
+        toast.error("Failed to submit feedback");
+      }
     } catch (error) {
       console.log(error, "feedback error");
       toast.error("Failed to submit feedback");
