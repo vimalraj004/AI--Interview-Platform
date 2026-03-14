@@ -1,13 +1,30 @@
 "use client";
 
 import { Plus, Video } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
+import { commonService } from "@/lib/utils";
+import { useAuth } from "@/app/context/authContext";
 
 const LatestInterviewList = () => {
+    const {userData}=useAuth();
   const [latestInterviewList, setLatestInterviewList] = useState([]);
   const router = useRouter()
+
+  const fetchLatestInterviews = async (email:string) => {
+    try {
+      const response = await commonService(`/api/latestInterviews?email=${email}`, "GET");
+      // setLatestInterviewList(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+   }
+useEffect(() => {
+  if(userData){
+    fetchLatestInterviews(userData.email);
+  }
+}, [userData]);
   return (
     <div className="mt-6">
       {latestInterviewList.length === 0 && (

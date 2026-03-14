@@ -26,8 +26,9 @@ import {
 } from "@/app/types/interviewStartPage";
 import ConversationContainer from "@/app/components/pages/ConversationContainer";
 import { commonService } from "@/lib/utils";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 const StartInterview = () => {
+  let navigate = useRouter();
   const { interviewData } = useInterviewData();
   console.log(interviewData, "interviewData");
   const { interview_id } = useParams();
@@ -121,7 +122,7 @@ const StartInterview = () => {
     if (timeRef.current) {
       clearInterval(timeRef.current);
     }
-    await getFeedBack();
+    // await getFeedBack();
   };
   const handleMessage = (message: vapiMessageEvent) => {
     console.log("Received message:", message);
@@ -264,6 +265,9 @@ Ensure the interview remains focused on React
       console.log(result, "feedback result");
       if(result.status === 200){
         toast.success("Feedback Submitted");
+        setTimeout(()=>{
+                  navigate.push(`/dashboard/interview/${interview_id}/completed`);
+        },500)
       } else{
         toast.error("Failed to submit feedback");
       }

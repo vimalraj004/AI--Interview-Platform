@@ -14,6 +14,7 @@ import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import { Button } from "../ui/button";
 import { Audio } from "react-loader-spinner";
+import { useAuth } from "@/app/context/authContext";
 
 interface QuestionListProps {
   setStep: React.Dispatch<React.SetStateAction<number>>;
@@ -23,6 +24,7 @@ interface QuestionListProps {
 }
 
 const QuestionList = ({ setStep, setInterviewLinkId,fetchQuestions,setFetchQuestions }: QuestionListProps) => {
+    const {userData}=useAuth();
   const formData = useGlobalStore();
   const { jobPosition, jobDescription, duration, interviewTypes } = formData;
   const [loading, setLoading] = useState(false);
@@ -58,6 +60,7 @@ const QuestionList = ({ setStep, setInterviewLinkId,fetchQuestions,setFetchQuest
     try {
       setSaveLoading(true);
       let payload = {
+        userEmail:userData?.email,
         jobPosition,
         jobDescription,
         duration,

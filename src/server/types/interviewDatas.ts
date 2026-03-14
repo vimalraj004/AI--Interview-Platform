@@ -3,6 +3,7 @@ export type questionListDatas = {
   type: string;
 };
 export interface interviewdatas {
+  userEmail:string;
   jobPosition: string;
   jobDescription: string;
   duration: string;

@@ -1,6 +1,7 @@
 import { object, string, z } from "zod";
 
 export const interviewdatas = z.object({
+  userEmail:z.string().email("Valid email is required"),
   jobPosition: z.string().min(1, "Job position is required"),
 
   jobDescription: z.string().min(1, "Job description is required"),

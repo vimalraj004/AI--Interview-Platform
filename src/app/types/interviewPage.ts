@@ -21,6 +21,16 @@ status:number
 
 export interface feedbackDatasResponse{
     message:string,
-    feedback:String,
+    feedback: {
+        rating: {
+            technicalSkills: number;
+            communication: number;
+            problemSolving: number;
+            experience: number;
+        };
+        summery: string;
+        Recommendation: string;
+        RecommendationMsg: string;
+    },
     status:number
 }

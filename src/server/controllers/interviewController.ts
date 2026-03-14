@@ -9,6 +9,7 @@ import Feedback from "../models/feedbackModel";
 
 export const saveInterviewDatas =async (body:interviewdatas)=>{
     const {
+      userEmail,
       jobPosition,
       duration,
       jobDescription,
@@ -16,6 +17,7 @@ export const saveInterviewDatas =async (body:interviewdatas)=>{
       questionList,
     } = body;
 const interview = await InterviewData.create({
+      userEmail,
       jobPosition,
       duration,
       jobDescription,
@@ -104,17 +106,25 @@ const conversationText = allConversation.map(item => `${item.role}:${item.conten
     .replace(/```/g, "")
     .trim();
 
+  let parsedFeedback;
+  try {
+    parsedFeedback = JSON.parse(cleaned);
+  } catch (parseError) {
+    console.error("Failed to parse OpenAI response as JSON:", cleaned);
+    throw new httpError("Invalid feedback format from AI service", 500);
+  }
+
   // save  all the data to feedback collection
   const feedback = await Feedback.create({
     interviewID,
     userName,
     allConversation,
-    feedback: JSON.parse(cleaned)
+    feedback: parsedFeedback.feedback
   });
   if(!feedback){
     throw new httpError("Failed to save feedback",400)
   }
-  return JSON.parse(cleaned);
+  return parsedFeedback.feedback;
 
 
 }
