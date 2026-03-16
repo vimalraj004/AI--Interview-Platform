@@ -6,18 +6,24 @@ import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import { commonService } from "@/lib/utils";
 import { useAuth } from "@/app/context/authContext";
+import { LatestInterviewData, LatestInterviewResponse } from "@/app/types/latestInterviewPage";
+import { toast } from "react-toastify";
 
 const LatestInterviewList = () => {
     const {userData}=useAuth();
-  const [latestInterviewList, setLatestInterviewList] = useState([]);
+  const [latestInterviewList, setLatestInterviewList] = useState<LatestInterviewData[]>([]);
   const router = useRouter()
 
   const fetchLatestInterviews = async (email:string) => {
     try {
-      const response = await commonService(`/api/latestInterviews?email=${email}`, "GET");
-      // setLatestInterviewList(response.data);
+      const response = await commonService<LatestInterviewResponse>(`/api/latestInterviews?email=${email}`, "GET");
+      setLatestInterviewList(response.data);
+      if(response.status === 200){
+              toast.success("Latest interviews fetched successfully!");
+      }
     } catch (error) {
       console.log(error);
+      toast.error("Failed to fetch latest interviews. Please try again later.");
     }
    }
 useEffect(() => {
