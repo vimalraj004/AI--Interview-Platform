@@ -1,7 +1,7 @@
 "use client";
 
 import { Plus, Video } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import { commonService } from "@/lib/utils";
@@ -19,6 +19,9 @@ const LatestInterviewList = () => {
     LatestInterviewData[]
   >([]);
   const router = useRouter();
+  const hasFetched = useRef(false);
+
+
 
   const fetchLatestInterviews = async (email: string) => {
     try {
@@ -39,8 +42,9 @@ const LatestInterviewList = () => {
   };
 
   useEffect(() => {
-    if (userData) {
+    if (userData && !hasFetched.current) {
       fetchLatestInterviews(userData.email);
+      hasFetched.current = true;
     }
   }, [userData]);
 
