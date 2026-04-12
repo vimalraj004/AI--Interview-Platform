@@ -35,14 +35,14 @@ const LatestInterviewList = () => {
       if (response.status === 200) {
         toast.success("Latest interviews fetched successfully!");
       }
-    } catch (error) {
+    } catch (error:any) {
       console.log(error);
-      toast.error("Failed to fetch latest interviews.");
+      toast.error(error?.message || "Failed to fetch latest interviews");
     }
   };
 
   useEffect(() => {
-    if (userData && !hasFetched.current) {
+    if (userData?.email && userData.email !== "" && !hasFetched.current) {
       fetchLatestInterviews(userData.email);
       hasFetched.current = true;
     }
