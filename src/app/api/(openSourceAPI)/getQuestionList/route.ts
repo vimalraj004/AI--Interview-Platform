@@ -11,6 +11,7 @@ export async function POST(req: NextRequest) {
     const result = await questionListService(body)
     return NextResponse.json({message:"QuestionFetched",data:result},{status:200})
   } catch (error:any) {
+    console.log(error,"error from question list route");
     if (error instanceof httpError) {
       return NextResponse.json(
         {

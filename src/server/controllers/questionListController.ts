@@ -41,5 +41,22 @@ export const fetchQuestionList = async (body: NewFormData) => {
     .replace(/```/g, "")
     .trim();
 
-  return JSON.parse(cleaned);
+  let parsed;
+
+  try {
+    parsed = JSON.parse(cleaned);
+  } catch (err) {
+    console.error("JSON Parse Error:", cleaned);
+    throw new httpError("Invalid JSON response from AI", 500);
+  }
+
+  if (
+    !parsed ||
+    !Array.isArray(parsed.interviewQuestions) ||
+    parsed.interviewQuestions.length === 0
+  ) {
+    throw new httpError("Invalid AI response format", 500);
+  }
+
+  return parsed;
 };

@@ -30,6 +30,7 @@ const QuestionList = ({ setStep, setInterviewLinkId,fetchQuestions,setFetchQuest
   const [loading, setLoading] = useState(false);
   const [saveLoading, setSaveLoading] = useState(false);
   const [questionList, setQuestionList] = useState<question[]>([]);
+  console.log(questionList,"questionList");
   const getQuestions = async (formData: NewFormData): Promise<void> => {
     try {
       setLoading(true);

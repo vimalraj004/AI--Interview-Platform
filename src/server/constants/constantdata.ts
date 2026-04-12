@@ -45,6 +45,7 @@ export const interviewTypes = [
 // Get QuestionList Prompt
 
 export const GET_QUESTIONLIST_PROMPT = `You are an expert technical interviewer.
+
 Based on the following inputs, generate a well-structured list of high-quality interview questions:
 
 Job Title: {{jobTitle}}
@@ -53,24 +54,37 @@ Interview Duration: {{duration}}
 Interview Type: {{type}}
 
 📝 Your task:
-Analyze the job description to identify key responsibilities, required skills, and expected experience.
-Generate a list of interview questions depends on interview duration.
-Adjust the number and depth of questions to match the interview duration.
-Ensure the questions match the tone and structure of a real-life {{type}} interview.
+- Analyze the job description to identify key responsibilities, required skills, and expected experience.
+- Generate interview questions based on the interview duration.
+- Adjust the number and depth of questions according to the duration.
+- Ensure questions match a real {{type}} interview.
 
-🧩 Format your response in JSON format with array list of questions.
+🧩 RESPONSE FORMAT (STRICT):
 
-format: interviewQuestions = [
-  {
-    question: "",
-    type: "Technical/Behavioral/Experience/Problem Solving/Leadership"
-  },
-  {
-    ...
-  }
-]
+Return ONLY a valid JSON object with EXACTLY this structure:
 
-🎯 The goal is to create a structured, relevant, and time-optimized interview plan for a {{jobTitle}} role.`;
+{
+  "interviewQuestions": [
+    {
+      "question": "string",
+      "type": "Technical | Behavioral | Experience | Problem Solving | Leadership"
+    }
+  ]
+}
+
+🚨 STRICT RULES:
+- Do NOT return an array directly
+- Do NOT change the key name "interviewQuestions"
+- Do NOT add any explanation or extra text
+- Do NOT include markdown (no \`\`\`json or \`\`\`)
+- Response must be pure JSON
+- Ensure the JSON is valid and parsable
+
+If the format is not followed exactly, the response will be rejected.
+
+🎯 Goal:
+Create a structured, relevant, and time-optimized interview plan for a {{jobTitle}} role.`;
+
 // Feedback Prompt
 
 export const GET_FEEDBACK_PROMPT = `{{conversation}}
