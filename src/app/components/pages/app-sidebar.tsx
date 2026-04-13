@@ -14,16 +14,19 @@ import {
 } from "@/app/components/ui/sidebar"
 import Image from "next/image"
 import { Button } from "@/app/components/ui/button"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
+import Link from "next/link"
 
 
 export function AppSidebar() {
   const path = usePathname()
+   const router = useRouter();
   return (
     <Sidebar className="bg-auth-gradient">
       <SidebarHeader >
          <Image src={"/sidebarlogo.png"} width={180} height={100} alt="logo" className="" />
-         <Button><Plus/>Create New Interview</Button>
+         <Button onClick={() => router.push("/dashboard/createInterview")}
+         ><Plus/>Create New Interview</Button>
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
@@ -31,12 +34,22 @@ export function AppSidebar() {
             <SidebarMenu>
               {sideBarMenuItems.map((item) => (
                 <SidebarMenuItem key={item.title} className="p-1">
-                  <SidebarMenuButton asChild className="p-5">
-                    <a href={item.url}>
-                      <item.icon className={`${path === item.url ? "text-primary":"text-white"}`} />
-                      <span className={` text-[16px] ${path === item.url ? "text-primary":"text-white"}`}>{item.title}</span>
-                    </a>
-                  </SidebarMenuButton>
+   <SidebarMenuButton asChild className="p-5">
+  <Link href={item.url}>
+    <item.icon
+      className={`${
+        path === item.url ? "text-primary" : "text-white"
+      }`}
+    />
+    <span
+      className={`text-[16px] ${
+        path === item.url ? "text-primary" : "text-white"
+      }`}
+    >
+      {item.title}
+    </span>
+  </Link>
+</SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>

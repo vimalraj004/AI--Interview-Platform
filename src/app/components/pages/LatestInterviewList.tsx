@@ -13,8 +13,9 @@ import {
 import { ToastContainer, toast } from "react-toastify";
 import ScheduledInterviewCard from "./ScheduledInterviewCard";
 
-const LatestInterviewList = () => {
+const LatestInterviewList = ({ allInterviews }: { allInterviews?: boolean }) => {
   const { userData } = useAuth();
+  console.log("User Data in all interview page:", userData);
   const [latestInterviewList, setLatestInterviewList] = useState<
     LatestInterviewData[]
   >([]);
@@ -26,7 +27,7 @@ const LatestInterviewList = () => {
   const fetchLatestInterviews = async (email: string) => {
     try {
       const response = await commonService<LatestInterviewResponse>(
-        `/api/latestInterviews?email=${email}`,
+        `/api/latestInterviews?email=${email}&allInterviews=${allInterviews}`,
         "GET"
       );
 

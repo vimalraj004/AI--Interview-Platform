@@ -1,7 +1,10 @@
+"use client"
 import { Phone, Video } from "lucide-react";
+import { useRouter } from "next/navigation";
 import React from "react";
 
 const CreateOptions = () => {
+    const router = useRouter();
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
       
@@ -19,7 +22,7 @@ const CreateOptions = () => {
           <Video className="h-5 w-5" />
         </div>
 
-        <div>
+        <div  onClick={() => router.push("/dashboard/createInterview")}>
           <h2 className="font-semibold font-mono text-sm sm:text-base">
             Create New Interview
           </h2>

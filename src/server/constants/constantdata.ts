@@ -14,7 +14,7 @@ export  const sideBarMenuItems = [
   },
   {
     title: "All Interview",
-    url: "/allInterview",
+    url: "/allInterviews",
     icon: List,
   },
 
