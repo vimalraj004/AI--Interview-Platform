@@ -30,6 +30,12 @@ interviewSchema.virtual("questionList", {
   localField: "_id",
   foreignField: "interviewID",
 });
+interviewSchema.virtual("feedback",{
+  ref:"Feedback",
+  localField:"_id",
+  foreignField:"interviewID",
+  justOne:true
+})
 
 interviewSchema.set("toObject", { virtuals: true });
 interviewSchema.set("toJSON", { virtuals: true });

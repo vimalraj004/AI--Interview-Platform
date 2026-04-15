@@ -1,4 +1,4 @@
-import { Copy, Send, Video } from "lucide-react";
+import { ArrowRight, Copy, Send, Video } from "lucide-react";
 import React from "react";
 import { Button } from "../ui/button";
 import { ToastContainer, toast } from "react-toastify";
@@ -9,11 +9,13 @@ interface ScheduledInterviewCardProps {
     jobPosition: string;
     jobDescription: string;
     duration: string;
+    // feedback: Object;
     createdAt: Date;
   };
+  scheduledInterviews?: boolean;
 }
 
-const ScheduledInterviewCard = ({ interview }: ScheduledInterviewCardProps) => {
+const ScheduledInterviewCard = ({ interview,scheduledInterviews }: ScheduledInterviewCardProps) => {
   const url =
     `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/interview/` + interview._id;
 
@@ -59,10 +61,15 @@ const ScheduledInterviewCard = ({ interview }: ScheduledInterviewCardProps) => {
       </h2>
 
       {/* duration */}
-      <p className="text-sm text-gray-500 mb-4">{interview.duration} Min</p>
+      <p className="text-sm text-gray-500 mb-4 flex justify-between">{interview.duration} Min
+        <span className="block text-xs text-gray-400">
+         {/* {interview.feedback} */}
+        </span>
+      </p>
 
       {/* buttons */}
-      <div className="flex gap-3">
+      {!scheduledInterviews ?(
+          <div className="flex gap-3">
         <Button
           variant="outline"
           onClick={copyLink}
@@ -80,6 +87,19 @@ const ScheduledInterviewCard = ({ interview }: ScheduledInterviewCardProps) => {
           Send
         </Button>
       </div>
+      ):(
+        <div className="flex ">
+        <Button
+          onClick={onSend}
+          className="flex-1 flex items-center gap-2"
+        >
+         View Details
+         <ArrowRight size={16} />
+        </Button>
+      </div>
+
+      )}
+
       <ToastContainer/>
     </div>
   );

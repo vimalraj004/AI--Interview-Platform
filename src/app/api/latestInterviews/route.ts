@@ -8,15 +8,19 @@ try {
     await dbConnect();    
     const email = req.nextUrl.searchParams.get("email");
     const allInterviewsParam = req.nextUrl.searchParams.get("allInterviews");
+    const scheduledInterviewsParam = req.nextUrl.searchParams.get("scheduledInterviews");
+
     if(!email){
         return NextResponse.json({message:'Email is required'}, {status:400});
     }
     let latestInterviews
     if(allInterviewsParam){
-        latestInterviews = await InterviewData.find({userEmail:email}).sort({createdAt:-1}).select("-__v -updatedAt -interviewTypes");
+        latestInterviews = await InterviewData.find({userEmail:email}).sort({createdAt:-1}).select("-__v -updatedAt -interviewTypes -feedback");
 
+    }else if(scheduledInterviewsParam){
+     latestInterviews = await InterviewData.find({userEmail:email}).sort({createdAt:-1}).select("-__v -updatedAt -interviewTypes ");
     }else{
-        latestInterviews = await InterviewData.find({userEmail:email}).sort({createdAt:-1}).limit(6).select("-__v -updatedAt -interviewTypes");
+        latestInterviews = await InterviewData.find({userEmail:email}).sort({createdAt:-1}).limit(6).select("-__v -updatedAt -interviewTypes -feedback");
     }
   if(latestInterviews.length === 0){
     return NextResponse.json({message:'No interviews found for this user'}, {status:404});

@@ -13,7 +13,12 @@ import {
 import { ToastContainer, toast } from "react-toastify";
 import ScheduledInterviewCard from "./ScheduledInterviewCard";
 
-const LatestInterviewList = ({ allInterviews }: { allInterviews?: boolean }) => {
+ type LatestInterviewListProps ={
+  allInterviews?: boolean;
+  scheduledInterviews?: boolean;
+}
+
+const LatestInterviewList = ({ allInterviews, scheduledInterviews }: LatestInterviewListProps) => {
   const { userData } = useAuth();
   console.log("User Data in all interview page:", userData);
   const [latestInterviewList, setLatestInterviewList] = useState<
@@ -27,7 +32,7 @@ const LatestInterviewList = ({ allInterviews }: { allInterviews?: boolean }) => 
   const fetchLatestInterviews = async (email: string) => {
     try {
       const response = await commonService<LatestInterviewResponse>(
-        `/api/latestInterviews?email=${email}&allInterviews=${allInterviews}`,
+        `/api/latestInterviews?email=${email}&allInterviews=${allInterviews}&scheduledInterviews=${scheduledInterviews}`,
         "GET"
       );
 
@@ -98,7 +103,7 @@ const LatestInterviewList = ({ allInterviews }: { allInterviews?: boolean }) => 
         "
         >
           {latestInterviewList.map((interview, index) => (
-            <ScheduledInterviewCard key={index} interview={interview} />
+            <ScheduledInterviewCard key={index} interview={interview} scheduledInterviews={scheduledInterviews} />
           ))}
         </div>
       )}
