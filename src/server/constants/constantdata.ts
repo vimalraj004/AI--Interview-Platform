@@ -9,7 +9,7 @@ export  const sideBarMenuItems = [
   },
   {
     title: "Scheduled Interview",
-    url: "/scheduledInterview",
+    url: "/scheduledInterviews",
     icon: Calendar,
   },
   {

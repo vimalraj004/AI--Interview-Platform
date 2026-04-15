@@ -2,6 +2,7 @@ import { ArrowRight, Copy, Send, Video } from "lucide-react";
 import React from "react";
 import { Button } from "../ui/button";
 import { ToastContainer, toast } from "react-toastify";
+import { Feedback } from "@/app/types/scheduledInterviewComponent";
 
 interface ScheduledInterviewCardProps {
   interview: {
@@ -9,7 +10,7 @@ interface ScheduledInterviewCardProps {
     jobPosition: string;
     jobDescription: string;
     duration: string;
-    // feedback: Object;
+    feedback: Feedback;
     createdAt: Date;
   };
   scheduledInterviews?: boolean;
@@ -62,9 +63,11 @@ const ScheduledInterviewCard = ({ interview,scheduledInterviews }: ScheduledInte
 
       {/* duration */}
       <p className="text-sm text-gray-500 mb-4 flex justify-between">{interview.duration} Min
-        <span className="block text-xs text-gray-400">
-         {/* {interview.feedback} */}
-        </span>
+        {scheduledInterviews && (
+          <span className="block text-xs text-gray-400">
+            {interview?.feedback?.rating?.technicalSkills ? `Rating: ${interview?.feedback?.rating?.technicalSkills}/5` : "No feedback yet"}
+          </span>
+        )}
       </p>
 
       {/* buttons */}
