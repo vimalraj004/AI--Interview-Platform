@@ -1,7 +1,11 @@
 import mongoose, { models,model } from "mongoose";
 
 const feedbackSchema = new mongoose.Schema({
-    interviewID: { type: String, required: true },
+       interviewID:{
+           type:mongoose.Schema.Types.ObjectId,
+           ref:"InterviewData",
+           required:true
+       },
     userName: { type: String, required: true },
     allConversation: [
         {

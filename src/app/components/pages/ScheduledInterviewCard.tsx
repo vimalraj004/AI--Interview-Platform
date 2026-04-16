@@ -17,6 +17,7 @@ interface ScheduledInterviewCardProps {
 }
 
 const ScheduledInterviewCard = ({ interview,scheduledInterviews }: ScheduledInterviewCardProps) => {
+  console.log("Interview data in ScheduledInterviewCard:", interview);
   const url =
     `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/interview/` + interview._id;
 
@@ -64,8 +65,8 @@ const ScheduledInterviewCard = ({ interview,scheduledInterviews }: ScheduledInte
       {/* duration */}
       <p className="text-sm text-gray-500 mb-4 flex justify-between">{interview.duration} Min
         {scheduledInterviews && (
-          <span className="block text-xs text-gray-400">
-            {interview?.feedback?.rating?.technicalSkills ? `Rating: ${interview?.feedback?.rating?.technicalSkills}/5` : "No feedback yet"}
+          <span className="block text-sm text-green-500">
+            {interview?.feedback? "Feedback available": "No feedback yet"}
           </span>
         )}
       </p>

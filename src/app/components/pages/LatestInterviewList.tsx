@@ -24,6 +24,7 @@ const LatestInterviewList = ({ allInterviews, scheduledInterviews }: LatestInter
   const [latestInterviewList, setLatestInterviewList] = useState<
     LatestInterviewData[]
   >([]);
+  console.log("Latest Interview List:", latestInterviewList);
   const router = useRouter();
   const hasFetched = useRef(false);
 
