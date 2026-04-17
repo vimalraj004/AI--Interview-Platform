@@ -1,3 +1,6 @@
+"use client";
+
+import Link from "next/link";
 import { ArrowRight, Copy, Send, Video } from "lucide-react";
 import React from "react";
 import { Button } from "../ui/button";
@@ -18,6 +21,7 @@ interface ScheduledInterviewCardProps {
 
 const ScheduledInterviewCard = ({ interview,scheduledInterviews }: ScheduledInterviewCardProps) => {
   console.log("Interview data in ScheduledInterviewCard:", interview);
+  
   const url =
     `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/interview/` + interview._id;
 
@@ -92,15 +96,17 @@ const ScheduledInterviewCard = ({ interview,scheduledInterviews }: ScheduledInte
         </Button>
       </div>
       ):(
-        <div className="flex ">
-        <Button
-          onClick={onSend}
-          className="flex-1 flex items-center gap-2"
-        >
-         View Details
-         <ArrowRight size={16} />
-        </Button>
-      </div>
+       <div className="flex">
+  <Link href={`/scheduledInterviews/${interview._id}/feedBackDetails`}>
+    <Button
+      className="flex-1 flex items-center gap-2"
+      disabled={!interview?.feedback}
+    >
+      View Details
+      <ArrowRight size={16} />
+    </Button>
+  </Link>
+</div>
 
       )}
 
