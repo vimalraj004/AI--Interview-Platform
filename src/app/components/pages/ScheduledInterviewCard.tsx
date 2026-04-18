@@ -6,6 +6,7 @@ import React from "react";
 import { Button } from "../ui/button";
 import { ToastContainer, toast } from "react-toastify";
 import { Feedback } from "@/app/types/scheduledInterviewComponent";
+import { useRouter } from "next/navigation";
 
 interface ScheduledInterviewCardProps {
   interview: {
@@ -19,9 +20,12 @@ interface ScheduledInterviewCardProps {
   scheduledInterviews?: boolean;
 }
 
-const ScheduledInterviewCard = ({ interview,scheduledInterviews }: ScheduledInterviewCardProps) => {
+const ScheduledInterviewCard = ({
+  interview,
+  scheduledInterviews,
+}: ScheduledInterviewCardProps) => {
   console.log("Interview data in ScheduledInterviewCard:", interview);
-  
+  const navigate = useRouter();
   const url =
     `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/interview/` + interview._id;
 
@@ -67,50 +71,50 @@ const ScheduledInterviewCard = ({ interview,scheduledInterviews }: ScheduledInte
       </h2>
 
       {/* duration */}
-      <p className="text-sm text-gray-500 mb-4 flex justify-between">{interview.duration} Min
+      <p className="text-sm text-gray-500 mb-4 flex justify-between">
+        {interview.duration} Min
         {scheduledInterviews && (
           <span className="block text-sm text-green-500">
-            {interview?.feedback? "Feedback available": "No feedback yet"}
+            {interview?.feedback ? "Feedback available" : "No feedback yet"}
           </span>
         )}
       </p>
 
       {/* buttons */}
-      {!scheduledInterviews ?(
-          <div className="flex gap-3">
-        <Button
-          variant="outline"
-          onClick={copyLink}
-          className="flex-1 flex items-center gap-2"
-        >
-          <Copy size={16} />
-          Copy Link
-        </Button>
+      {!scheduledInterviews ? (
+        <div className="flex gap-3">
+          <Button
+            variant="outline"
+            onClick={copyLink}
+            className="flex-1 flex items-center gap-2"
+          >
+            <Copy size={16} />
+            Copy Link
+          </Button>
 
-        <Button
-          onClick={onSend}
-          className="flex-1 flex items-center gap-2"
-        >
-          <Send size={16} />
-          Send
-        </Button>
-      </div>
-      ):(
-       <div className="flex">
-  <Link href={`/scheduledInterviews/${interview._id}/feedBackDetails`}>
-    <Button
-      className="flex-1 flex items-center gap-2"
-      disabled={!interview?.feedback}
-    >
-      View Details
-      <ArrowRight size={16} />
-    </Button>
-  </Link>
-</div>
-
+          <Button onClick={onSend} className="flex-1 flex items-center gap-2">
+            <Send size={16} />
+            Send
+          </Button>
+        </div>
+      ) : (
+        <div className="flex">
+          <Button
+            className="flex-1 flex items-center gap-2"
+            disabled={!interview?.feedback}
+            onClick={() =>
+              navigate.push(
+                `/scheduledInterviews/${interview._id}/feedBackDetails`,
+              )
+            }
+          >
+            View Details
+            <ArrowRight size={16} />
+          </Button>
+        </div>
       )}
 
-      <ToastContainer/>
+      <ToastContainer />
     </div>
   );
 };

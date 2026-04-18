@@ -5,8 +5,6 @@ import { NextRequest, NextResponse } from "next/server";
 import "@/server/models/feedbackModel";
 export async function GET(req:NextRequest, res:NextResponse) {
 try {
-            console.log("hei ru comming here1")
-
     await dbConnect();    
     const email = req.nextUrl.searchParams.get("email");
     const allInterviewsParam = req.nextUrl.searchParams.get("allInterviews");
