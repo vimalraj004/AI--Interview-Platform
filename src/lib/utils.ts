@@ -12,13 +12,16 @@ export const commonService = async <TResponse> (
   endpoint: string,
   type: string,
   payload?: object,
+  isFormData: boolean = false
 ): Promise<TResponse> => {
   try {
     const response = await axios({
       url: `${process.env.NEXT_PUBLIC_BASE_URL}${endpoint}`,
       method: type,
       data: payload,
-      headers: { "Content-Type": "application/json" },
+      headers: isFormData
+        ? {} // for file transfers
+        : { "Content-Type": "application/json" },
       withCredentials:true
     });
     return{

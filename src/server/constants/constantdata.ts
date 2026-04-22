@@ -112,3 +112,28 @@ Return ONLY valid JSON in this exact format:
   }
 }`
 
+// Resume Analyzer Prompt
+export const RESUME_ANALYZER_PROMPT = `
+You are an ATS (Applicant Tracking System).
+
+JOB DESCRIPTION:
+{jobDescription}
+
+CANDIDATE RESUME:
+{resumeText}
+
+TASKS:
+1. Give a match score (0-100%)
+2. List missing skills
+3. Suggest improvements
+4. Rewrite the resume to better match the job
+
+Return response in JSON format:
+{
+  "score": number,
+  "missingSkills": [],
+  "suggestions": [],
+  "updatedResume": "..."
+}
+`
+
