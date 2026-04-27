@@ -25,7 +25,6 @@ try {
      latestInterviews = await InterviewData.find({userEmail:email}).sort({createdAt:-1}).populate("feedback").select("-__v -updatedAt -interviewTypes ");
      console.log("latestInterviews:",latestInterviews)
     }else{
-                console.log("hei ru comming here5")
 
         latestInterviews = await InterviewData.find({userEmail:email}).sort({createdAt:-1}).limit(6).select("-__v -updatedAt -interviewTypes -feedback");
     }

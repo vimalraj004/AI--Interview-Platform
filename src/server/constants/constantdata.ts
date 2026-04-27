@@ -123,17 +123,22 @@ CANDIDATE RESUME:
 {resumeText}
 
 TASKS:
-1. Give a match score (0-100%)
+1. Give a match score (0-100)
 2. List missing skills
 3. Suggest improvements
-4. Rewrite the resume to better match the job
 
-Return response in JSON format:
+IMPORTANT INSTRUCTIONS:
+- Return ONLY valid JSON
+- Do NOT include any explanation, text, or formatting outside JSON
+- Do NOT include markdown (no \`\`\`)
+- Ensure the JSON is complete and properly formatted
+- Keep responses concise
+
+RESPONSE FORMAT:
 {
   "score": number,
-  "missingSkills": [],
-  "suggestions": [],
-  "updatedResume": "..."
+  "missingSkills": ["skill1", "skill2"],
+  "suggestions": ["suggestion1", "suggestion2"]
 }
-`
+`;
 

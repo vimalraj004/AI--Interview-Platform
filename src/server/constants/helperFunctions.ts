@@ -1,15 +1,9 @@
-import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf.mjs";
 import mammoth from "mammoth";
 export const findFileType = async (fileType:string, buffer:Buffer, extractedText: string): Promise<string> => {
  if (fileType === "application/pdf") {
-  const pdf = await pdfjsLib.getDocument({ data: buffer }).promise;
-  let text = "";
-  for (let i = 1; i <= pdf.numPages; i++) {
-    const page = await pdf.getPage(i);
-    const textContent = await page.getTextContent();
-    text += textContent.items.map((item: any) => item.str).join("");
-  }
-  extractedText = text;
+ const pdf = (await import("pdf-parse-fork")).default;
+ const data = await pdf(buffer);
+  extractedText = data.text;
     } 
   else if (
       fileType ===

@@ -48,14 +48,7 @@ export const resumeController = async (extractedFileString:string,jobDescription
       console.error("JSON Parse Error:", cleaned);
       throw new httpError("Invalid JSON response from AI", 500);
     }
-  
-    if (
-      !parsed ||
-      !Array.isArray(parsed.interviewQuestions) ||
-      parsed.interviewQuestions.length === 0
-    ) {
-      throw new httpError("Invalid AI response format", 500);
-    }
+    console.log("Parsed AI Response:", parsed);
   
     return parsed;
 }

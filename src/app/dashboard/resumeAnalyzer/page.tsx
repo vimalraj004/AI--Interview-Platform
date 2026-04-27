@@ -1,17 +1,23 @@
 "use client";
 import WelcomeContainer from "@/app/components/pages/WelcomeContainer";
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { UploadCloud } from "lucide-react";
 import ResumeDropzone from "@/app/components/pages/ResumeDropzone";
 import { commonService } from "@/lib/utils";
 import { ToastContainer, toast } from "react-toastify";
 
+export interface ResumeAnalysis {
+  score: number;
+  missingSkills: string[];
+  suggestions: string[];
+}
 
 const ResumeAnalyzer = () => {
 
     const [jobDescription, setJobDescription] = React.useState("");
-    const [resumeFile, setResumeFile] = React.useState<File | null>(null);
+    const [resumeFile, setResumeFile] = useState<File | null>(null);
+    const [analysis, setAnalysis] = useState<ResumeAnalysis | null>(null);
     const handleFileUpload = (file: File) => {
     console.log("Uploaded file:", file);
     setResumeFile(file);
@@ -36,8 +42,14 @@ const ResumeAnalyzer = () => {
         toast.error("File size exceeds 2MB limit. Please upload a smaller file.");
         return;
     }
-    const response = await commonService("/api/uploadResume","POST",formData,true)
+    const response = await commonService<ResumeAnalysis>("/api/uploadResume","POST",formData,true)
     console.log("Upload resume:", response);
+    if(response.status === 200){
+        toast.success("Resume analyzed successfully!");
+        setAnalysis(response.data);
+    }else{
+        toast.error(response.message || "Failed to analyze resume.");
+    }
         
     } catch (error) {
         toast.error("An error occurred while analyzing your resume.");
