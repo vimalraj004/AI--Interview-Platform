@@ -92,7 +92,6 @@ const LoginPage = () => {
         email: user.email,
         googleID: user.uid,
       };
-      console.log(payload,"payload")
       const response = await commonService<loginrFormResponse>(
         "/api/login",
         "POST",
