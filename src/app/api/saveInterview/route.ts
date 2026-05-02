@@ -1,5 +1,6 @@
 import { interviewdatas } from "@/app/validators/saveInterviews";
 import { httpError } from "@/errors/http.erros";
+import { redis } from "@/lib/redis";
 import { dbConnect } from "@/server/lib/db";
 import { saveInterviewService } from "@/server/services/interviewPage";
 import { NextRequest, NextResponse } from "next/server";
@@ -18,6 +19,7 @@ export  async function POST(req:NextRequest) {
     }
    const result =  await saveInterviewService(body)
     console.log(result,"interviewresult")
+    await redis.del("latest_interviews");
     return NextResponse.json({message:"Interview Created",data:result,},{status:200})
         
     } catch (error) {

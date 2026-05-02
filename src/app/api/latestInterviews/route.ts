@@ -3,43 +3,103 @@ import { dbConnect } from "@/server/lib/db";
 import InterviewData from "@/server/models/interviewModel";
 import { NextRequest, NextResponse } from "next/server";
 import "@/server/models/feedbackModel";
-export async function GET(req:NextRequest, res:NextResponse) {
-try {
-    await dbConnect();    
+import { redis } from "@/lib/redis";
+
+export async function GET(req: NextRequest, res: NextResponse) {
+  try {
+    await dbConnect();
     const email = req.nextUrl.searchParams.get("email");
     const allInterviewsParam = req.nextUrl.searchParams.get("allInterviews");
-    const scheduledInterviewsParam = req.nextUrl.searchParams.get("scheduledInterviews");
-        console.log( typeof scheduledInterviewsParam,"hei ru comming here2")
+    const scheduledInterviewsParam = req.nextUrl.searchParams.get(
+      "scheduledInterviews",
+    );
 
-    if(!email){
-        return NextResponse.json({message:'Email is required'}, {status:400});
+    // for redis
+    const ip = req.headers.get("x-forwarded-for");
+    const rateLimitKey = `rate_limit:${ip}`;
+    const cacheKey = "latest_interviews";
+
+    if (!email) {
+      return NextResponse.json(
+        { message: "Email is required" },
+        { status: 400 },
+      );
     }
-    let latestInterviews
-    if(allInterviewsParam === "true"){
-                console.log(allInterviewsParam,"hei ru comming here3")
+    let latestInterviews;
+    if (allInterviewsParam === "true") {
+      latestInterviews = await InterviewData.find({ userEmail: email })
+        .sort({ createdAt: -1 })
+        .select("-__v -updatedAt -interviewTypes -feedback");
+    } else if (scheduledInterviewsParam === "true") {
+      latestInterviews = await InterviewData.find({ userEmail: email })
+        .sort({ createdAt: -1 })
+        .populate("feedback")
+        .select("-__v -updatedAt -interviewTypes ");
+    } else {
+      //  RATE LIMIT (max 10 requests per minute)
+      const current = await redis.incr(rateLimitKey);
 
-        latestInterviews = await InterviewData.find({userEmail:email}).sort({createdAt:-1}).select("-__v -updatedAt -interviewTypes -feedback");
+      if (current === 1) {
+        // set expiry only when first request comes
+        await redis.expire(rateLimitKey, 60); // 60 sec window
+      }
 
-    }else if(scheduledInterviewsParam === "true"){
-        console.log("hei ru comming here4")
-     latestInterviews = await InterviewData.find({userEmail:email}).sort({createdAt:-1}).populate("feedback").select("-__v -updatedAt -interviewTypes ");
-     console.log("latestInterviews:",latestInterviews)
-    }else{
+      if (current > 10) {
+        return NextResponse.json(
+          {
+            message: "Too many requests. Please try again later.",
+          },
+          { status: 429 },
+        );
+      }
+      // CHECK CACHE
+      const cachedData = await redis.get(cacheKey);
 
-        latestInterviews = await InterviewData.find({userEmail:email}).sort({createdAt:-1}).limit(6).select("-__v -updatedAt -interviewTypes -feedback");
+      if (cachedData) {
+        console.log("✅ Cache HIT");
+        return NextResponse.json(
+          {
+            message: "Successfully Fetched The Latest Interviews",
+            data: cachedData,
+          },
+          { status: 200 },
+        );
+      }
+
+      console.log("❌ Cache MISS");
+
+      latestInterviews = await InterviewData.find({ userEmail: email })
+        .sort({ createdAt: -1 })
+        .limit(6)
+        .select("-__v -updatedAt -interviewTypes -feedback");
+      console.log("latestInterviews for dashboard:", latestInterviews);
+      // . STORE IN CACHE
+      await redis.set(cacheKey, latestInterviews, { ex: 300 });
     }
-  if(latestInterviews.length === 0){
-    return NextResponse.json({message:'No interviews found for this user'}, {status:404});
+    if (latestInterviews.length === 0) {
+      return NextResponse.json(
+        { message: "No interviews found for this user" },
+        { status: 404 },
+      );
+    }
+    return NextResponse.json(
+      {
+        message: "Successfully Fetched The Latest Interviews",
+        data: latestInterviews,
+      },
+      { status: 200 },
+    );
+  } catch (error) {
+    console.error(error);
+    if (error instanceof httpError) {
+      return NextResponse.json(
+        { message: error.message },
+        { status: error.statuscode },
+      );
+    }
+    return NextResponse.json(
+      { message: "Internal Server Error" },
+      { status: 500 },
+    );
   }
-  return NextResponse.json({message:"Successfully Fetched The Latest Interviews",data:latestInterviews}, {status:200});
-
-    
-} catch (error) {
-    console.error(error);   
-    if(error instanceof httpError){
-        return NextResponse.json({message:error.message}, {status:error.statuscode});   
-    }   
-    return NextResponse.json({message:"Internal Server Error"}, {status:500});        
-  
-}
 }
