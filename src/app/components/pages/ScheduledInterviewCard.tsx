@@ -35,7 +35,14 @@ const ScheduledInterviewCard = ({
   };
 
   const onSend = () => {
-    window.location.href = `mailto:?subject=Invitation to AI Interview for ${interview.jobPosition}&body=Interview Link: ${url}`;
+    // window.location.href = `mailto:?subject=Invitation to AI Interview for ${interview.jobPosition}&body=Interview Link: ${url}`;
+const message = `Hey! I’ve scheduled an interview.
+Join here:
+${url}`;
+
+const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
+
+window.open(whatsappUrl, "_blank");
   };
 
   return (
