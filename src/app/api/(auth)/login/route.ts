@@ -14,9 +14,7 @@ export async function POST(req: NextRequest) {
     let parsedData;
     let payload;
     if (!body.password) {
-        console.log(body,"body")
       parsedData = googleLoginSchema.safeParse(body);
-      console.log(parsedData,"parsedData")
       payload = {
         email: parsedData.data!.email,
         googleID: parsedData.data?.googleID,
