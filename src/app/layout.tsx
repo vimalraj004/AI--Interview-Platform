@@ -3,6 +3,7 @@ import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import "./globals.css";
 import { AuthProvider } from "./context/authContext";
+import ApolloWrapper from "@/providers/ApolloWrapper";
 
 export const metadata: Metadata = {
   title: "AI Interview Platform",
@@ -21,7 +22,10 @@ export default function RootLayout({
     >
       <body className="font-sans antialiased">
         <AuthProvider>
-          {children}
+          <ApolloWrapper >
+              {children}
+          </ApolloWrapper>
+        
         </AuthProvider>
       </body>
     </html>

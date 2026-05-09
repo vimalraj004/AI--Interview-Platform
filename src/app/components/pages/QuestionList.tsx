@@ -15,39 +15,61 @@ import { ToastContainer, toast } from "react-toastify";
 import { Button } from "../ui/button";
 import { Audio } from "react-loader-spinner";
 import { useAuth } from "@/app/context/authContext";
+import { GET_QUESTION_LIST } from "@/graphql/mutation";
+import { useMutation } from "@apollo/client/react";
 
 interface QuestionListProps {
   setStep: React.Dispatch<React.SetStateAction<number>>;
   setInterviewLinkId: React.Dispatch<React.SetStateAction<string>>;
-  fetchQuestions:boolean;
-  setFetchQuestions:React.Dispatch<React.SetStateAction<boolean>>
+  fetchQuestions: boolean;
+  setFetchQuestions: React.Dispatch<React.SetStateAction<boolean>>;
+}
+interface GetQuestionListMutation {
+  getQuestionList: {
+    interviewQuestions: question[];
+  };
 }
 
-const QuestionList = ({ setStep, setInterviewLinkId,fetchQuestions,setFetchQuestions }: QuestionListProps) => {
-    const {userData}=useAuth();
+interface GetQuestionVariables {
+  input: NewFormData;
+}
+
+const QuestionList = ({
+  setStep,
+  setInterviewLinkId,
+  fetchQuestions,
+  setFetchQuestions,
+}: QuestionListProps) => {
+  const { userData } = useAuth();
   const formData = useGlobalStore();
   const { jobPosition, jobDescription, duration, interviewTypes } = formData;
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const [saveLoading, setSaveLoading] = useState(false);
   const [questionList, setQuestionList] = useState<question[]>([]);
+
+  const [getQuestionListMutation, { loading }] = useMutation<
+    GetQuestionListMutation,
+    GetQuestionVariables
+  >(GET_QUESTION_LIST);
   const getQuestions = async (formData: NewFormData): Promise<void> => {
     try {
-      setLoading(true);
-      const result = await commonService<QuestionResponse>(
-        "/api/getQuestionList",
-        "POST",
-        formData,
-      );
-      console.log(result, "resultfromfe");
-      if (result.status === 200) {
-        setQuestionList(result?.data?.interviewQuestions);
-        toast.success(result.message);
+      const result = await getQuestionListMutation({
+        variables: {
+          input: formData,
+        },
+      });
+
+      console.log(result);
+
+      if (result.data?.getQuestionList?.interviewQuestions) {
+        setQuestionList(result.data.getQuestionList.interviewQuestions);
+
+        toast.success("Questions Fetched");
       }
     } catch (error: any) {
       toast.error(error.message);
+
       console.log(error);
-    } finally {
-      setLoading(false);
     }
   };
   useEffect(() => {
@@ -60,7 +82,7 @@ const QuestionList = ({ setStep, setInterviewLinkId,fetchQuestions,setFetchQuest
     try {
       setSaveLoading(true);
       let payload = {
-        userEmail:userData?.email,
+        userEmail: userData?.email,
         jobPosition,
         jobDescription,
         duration,
