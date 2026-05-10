@@ -7,7 +7,6 @@ export async function GET (req:NextRequest){
     try {
         await dbConnect();
         const interviewID =  req.nextUrl.searchParams.get("interview_id")
-        console.log(interviewID,"checkfthisinterviewID")
         if(!interviewID){
             return NextResponse.json({message:'InterviewID is required'},{status:400})
         }

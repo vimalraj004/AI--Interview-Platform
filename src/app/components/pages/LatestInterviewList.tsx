@@ -20,11 +20,9 @@ import ScheduledInterviewCard from "./ScheduledInterviewCard";
 
 const LatestInterviewList = ({ allInterviews, scheduledInterviews }: LatestInterviewListProps) => {
   const { userData } = useAuth();
-  console.log("User Data in all interview page:", userData);
   const [latestInterviewList, setLatestInterviewList] = useState<
     LatestInterviewData[]
   >([]);
-  console.log("Latest Interview List:", latestInterviewList);
   const router = useRouter();
   const hasFetched = useRef(false);
 

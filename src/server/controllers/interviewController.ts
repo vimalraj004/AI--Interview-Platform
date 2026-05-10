@@ -46,8 +46,6 @@ export const fetchInterviewDatas =async(interviewID:string)=>{
   .populate("questionList")
   .lean();
 
-console.log(data, "check this data");
-
 if (!data) {
  throw new httpError("Invalid interviewID",400)}
 
@@ -63,8 +61,6 @@ const responseData = {
   duration,
   questionList: cleanData
 };
-
-console.log(responseData, "responseData");
 
 return responseData; 
 }
@@ -95,7 +91,6 @@ const conversationText = allConversation.map(item => `${item.role}:${item.conten
     return completion.choices[0].message.content || "";
   } catch (error: any) {
     console.error("OpenAI Error:", error);
-    console.log("check header :",error.headers)
     throw new httpError("OpenAI request failed", 500);
   }
 }

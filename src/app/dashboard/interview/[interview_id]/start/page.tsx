@@ -30,9 +30,7 @@ import { useParams, useRouter } from "next/navigation";
 const StartInterview = () => {
   let navigate = useRouter();
   const { interviewData } = useInterviewData();
-  console.log(interviewData, "interviewData");
   const { interview_id } = useParams();
-  console.log(interview_id, "interviewId");
   const vapiRef = useRef<Vapi | null>(null);
   const hasStartedRef = useRef(false);
   const [activeUser, setActiveUser] = useState(false);
@@ -79,10 +77,8 @@ const StartInterview = () => {
     }
   }, [cameraOn]);
   const handleError = (err: any) => {
-    console.log("Vapi error:", err);
   };
   const handleCallStart = () => {
-    console.log("call has started");
     toast.success("Call Connected");
     setElapsedTime(0);
     const durationInMinutes = Number(interviewData.duration) || 0;
@@ -109,15 +105,12 @@ const StartInterview = () => {
     }, 1000);
   };
   const handleSpeechStart = () => {
-    console.log("Assistant speech has started");
     setActiveUser(false);
   };
   const handleSpeechEnd = () => {
-    console.log("Assistant speech has ended ");
     setActiveUser(true);
   };
   const handleCallEnd = async () => {
-    console.log("Call ended properly");
     toast.error("Interview Stoped");
     if (timeRef.current) {
       clearInterval(timeRef.current);
@@ -125,7 +118,6 @@ const StartInterview = () => {
     // await getFeedBack();
   };
   const handleMessage = (message: vapiMessageEvent) => {
-    console.log("Received message:", message);
     if (!isConversationUpdateMessage(message)) return;
     if (
       message.type === "conversation-update" &&
@@ -200,7 +192,6 @@ const StartInterview = () => {
       const allQuestions = combineAllQuestionsIntoString(
         interviewData.questionList,
       );
-      console.log(allQuestions, "allQuestions");
       const assistantOptions: CreateAssistantDTO = {
         name: "AI Recruiter",
         firstMessage: `Hi ${interviewData.userName}, how are you? Ready for your interview on ${interviewData.jobPosition}?`,
@@ -262,7 +253,6 @@ Ensure the interview remains focused on React
         "POST",
         payload,
       );
-      console.log(result, "feedback result");
       if(result.status === 200){
         toast.success("Feedback Submitted");
         setTimeout(()=>{

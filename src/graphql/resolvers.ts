@@ -11,7 +11,6 @@ export const resolvers = {
       const feedbackDetails = await Feedback.findOne({
         interviewID: new mongoose.Types.ObjectId(args.interviewId),
       }).select("-__v -updatedAt");
-      console.log("Feedback details fetched in resolver:", feedbackDetails);
       if (!feedbackDetails) {
         throw new Error("Feedback details not found");
       }

@@ -21,7 +21,6 @@ const LogoutContainer = () => {
     const logout= async()=>{
         try {
             const result = await commonService<logoutResponse>("/api/logout","post")
-            console.log(result,"checkresult")
             if(result.status === 200){
                 toast.success(result.message)
                 navigate.push("/")

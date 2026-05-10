@@ -26,11 +26,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     email: "",
   };
   const [userData, setUserData] = useState<userData | null>(initialUserData);
-  console.log(userData,"userData")
   const getUserData = async()=>{
     try {
     const result = await commonService<authmeDTOResponse>("/api/authme","GET")
-    console.log(result,"result")
     setUserData(result.userData)
     } catch (error) {
         console.log(error)

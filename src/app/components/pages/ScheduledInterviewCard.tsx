@@ -24,7 +24,6 @@ const ScheduledInterviewCard = ({
   interview,
   scheduledInterviews,
 }: ScheduledInterviewCardProps) => {
-  console.log("Interview data in ScheduledInterviewCard:", interview);
   const navigate = useRouter();
   const url =
     `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/interview/` + interview._id;

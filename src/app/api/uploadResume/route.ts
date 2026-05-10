@@ -14,7 +14,6 @@ export async function POST(req:NextRequest,res:NextResponse){
       if(!result){
         return NextResponse.json({message:"Failed to analyze resume"},{status:400})
       }
-      console.log("Resume analysis result:", result);
         return NextResponse.json({message:"Resume analyzed successfully",data:result},{status:200})
         
     } catch (error) {

@@ -4,7 +4,6 @@ export function middleware(request: NextRequest) {
   const accessToken = request.cookies.get("accessToken")?.value;
   const isPublicPath = pathname === "/"
   if(isPublicPath && accessToken){
-    console.log("r u comming here")
       // Already logged in, no need to be on login page
     return NextResponse.redirect(new URL("/dashboard",request.url))
   }

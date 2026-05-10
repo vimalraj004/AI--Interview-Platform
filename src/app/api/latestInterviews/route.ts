@@ -72,7 +72,6 @@ export async function GET(req: NextRequest, res: NextResponse) {
         .sort({ createdAt: -1 })
         .limit(6)
         .select("-__v -updatedAt -interviewTypes -feedback");
-      console.log("latestInterviews for dashboard:", latestInterviews);
       // . STORE IN CACHE
       await redis.set(cacheKey, latestInterviews, { ex: 300 });
     }

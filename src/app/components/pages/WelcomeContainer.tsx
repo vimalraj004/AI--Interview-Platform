@@ -7,7 +7,6 @@ import LogoutContainer from "./LogoutContainer";
 
 const WelcomeContainer = () => {
   const {userData}=useAuth();
-  console.log(userData,"checkuserdata")
   return (
     <div
       className="

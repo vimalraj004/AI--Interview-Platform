@@ -6,7 +6,6 @@ import FeedbackDetails from '@/app/components/pages/FeedbackDetails';
 
 const FeedbackPage = () => {
     const { interview_id } = useParams();
-      console.log("Interview ID in Feedback Layout:", interview_id , typeof interview_id);
    return (
       <div className='min-h-screen w-full pt-5 pr-5 '> 
       <WelcomeContainer />

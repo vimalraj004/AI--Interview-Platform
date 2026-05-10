@@ -30,7 +30,6 @@ export const fetchQuestionList = async (body: NewFormData) => {
     return completion.choices[0].message.content || "";
   } catch (error: any) {
     console.error("OpenAI Error:", error);
-    console.log("check header :",error.headers)
     throw new httpError("OpenAI request failed", 500);
   }
 }

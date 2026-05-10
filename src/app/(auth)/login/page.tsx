@@ -116,7 +116,6 @@ const LoginPage = () => {
       const auth = getAuth();
       signInWithPopup(auth, googleSignUpProvide).then((result) => {
         const user = result.user;
-        console.log(user, "checkthe user");
         sendGoogleDatas(user);
       });
     } catch (error: any) {
@@ -125,7 +124,6 @@ const LoginPage = () => {
     }
   };
   useEffect(() => {
-    console.log("hei r u calling1");
     initializeFireBase();
   }, []);
   return (

@@ -29,13 +29,7 @@ const InterviewLink = ({ interviewLinkId }: InterviewLinkProps) => {
     interviewLinkId;
   const formData = useGlobalStore();
   const { jobPosition, jobDescription, duration, interviewTypes } = formData;
-  console.log(
-    jobPosition,
-    jobDescription,
-    duration,
-    interviewTypes,
-    "check these data",
-  );
+
   const navigate = useRouter();
   const onCopyLink = async () => {
     await navigator.clipboard.writeText(url);

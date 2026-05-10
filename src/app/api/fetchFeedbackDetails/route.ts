@@ -7,7 +7,6 @@ export async function GET(req:NextRequest,res:NextResponse){
     try {
           await dbConnect();   
             const interveiwId = req.nextUrl.searchParams.get("interviewId");
-            console.log("Interview ID received in API route:", interveiwId);
             if(!interveiwId){
                 return NextResponse.json({message:'Interview ID is required'}, {status:400});
             }

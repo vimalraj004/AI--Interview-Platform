@@ -59,8 +59,6 @@ const QuestionList = ({
         },
       });
 
-      console.log(result);
-
       if (result.data?.getQuestionList?.interviewQuestions) {
         setQuestionList(result.data.getQuestionList.interviewQuestions);
 
@@ -94,7 +92,6 @@ const QuestionList = ({
         "POST",
         payload,
       );
-      console.log(response, "responsefromquestionLIst");
       if (response.status === 200) {
         setStep((prev) => prev + 1);
         setInterviewLinkId(response.data);

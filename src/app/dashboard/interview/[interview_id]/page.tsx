@@ -30,7 +30,6 @@ export default function InterviewPage() {
         `/api/fetchInterviewData?interview_id=${interview_id}`,
         "GET",
       );
-      console.log(result, "resultFromUIside");
       setInterviewData(result.data);
     } catch (error) {
       console.log(error);

@@ -18,7 +18,6 @@ export  async function POST(req:NextRequest) {
       });
     }
    const result =  await saveInterviewService(body)
-    console.log(result,"interviewresult")
     await redis.del("latest_interviews");
     return NextResponse.json({message:"Interview Created",data:result,},{status:200})
         

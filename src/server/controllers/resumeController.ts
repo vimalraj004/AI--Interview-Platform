@@ -29,7 +29,6 @@ export const resumeController = async (extractedFileString:string,jobDescription
       return completion.choices[0].message.content || "";
     } catch (error: any) {
       console.error("OpenAI Error:", error);
-      console.log("check header :",error.headers)
       throw new httpError("OpenAI request failed", 500);
     }
   }
@@ -47,8 +46,6 @@ export const resumeController = async (extractedFileString:string,jobDescription
     } catch (err) {
       console.error("JSON Parse Error:", cleaned);
       throw new httpError("Invalid JSON response from AI", 500);
-    }
-    console.log("Parsed AI Response:", parsed);
-  
+    }  
     return parsed;
 }
