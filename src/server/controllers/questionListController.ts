@@ -15,7 +15,7 @@ export const fetchQuestionList = async (body: NewFormData) => {
     baseURL: "https://openrouter.ai/api/v1",
     apiKey: process.env.OPEN_ROUTER_API_KEY,
     defaultHeaders: {
-      "HTTP-Referer": "http://localhost:3000", // change when deploying
+      "HTTP-Referer": process.env.BASE_URL, // change when deploying
       "X-Title": "AI Interview App",
     },
   });
@@ -30,7 +30,35 @@ export const fetchQuestionList = async (body: NewFormData) => {
     return completion.choices[0].message.content || "";
   } catch (error: any) {
     console.error("OpenAI Error:", error);
-    throw new httpError("OpenAI request failed", 500);
+       // API KEY INVALID / EXPIRED
+      if (error.status === 401) {
+        throw new httpError(
+          "AI service authentication failed. Please contact admin.",
+          401
+        );
+      }
+
+      // RATE LIMIT
+      if (error.status === 429) {
+        throw new httpError(
+          "AI service rate limit exceeded. Please try again later.",
+          429
+        );
+      }
+
+      // MODEL ERROR
+      if (error.status === 404) {
+        throw new httpError(
+          "Selected AI model is unavailable.",
+          404
+        );
+      }
+
+      // FALLBACK ERROR
+      throw new httpError(
+        error.message || "AI request failed",
+        500
+      );
   }
 }
 

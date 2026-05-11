@@ -261,10 +261,11 @@ Ensure the interview remains focused on React
       } else{
         toast.error("Failed to submit feedback");
       }
-    } catch (error) {
+    } catch (error:any) {
       console.log(error, "feedback error");
-      toast.error("Failed to submit feedback");
-    }
+  toast.error(
+      error.message || "Failed to submit feedback"
+    );    }
   };
   return (
     <div className="min-h-screen w-full bg-auth-gradient text-white flex flex-col">
