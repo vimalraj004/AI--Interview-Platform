@@ -60,8 +60,11 @@ const ResumeAnalyzer = () => {
       } else {
         toast.error(response?.message || "Failed to analyze resume.");
       }
-    } catch (error) {
+    } catch (error:any) {
       toast.error("Something went wrong.");
+        toast.error(
+            error.message || "Failed to submit feedback"
+          ); 
     } finally {
       setLoading(false);
     }
