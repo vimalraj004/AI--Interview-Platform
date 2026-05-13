@@ -26,7 +26,7 @@ const ScheduledInterviewCard = ({
 }: ScheduledInterviewCardProps) => {
   const navigate = useRouter();
   const url =
-    `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/interview/` + interview._id;
+    `${window.location.origin}/dashboard/interview/` + interview._id;
 
   const copyLink = () => {
     navigator.clipboard.writeText(url);

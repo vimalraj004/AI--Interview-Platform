@@ -16,7 +16,7 @@ export const commonService = async <TResponse> (
 ): Promise<TResponse> => {
   try {
     const response = await axios({
-      url: `${process.env.NEXT_PUBLIC_BASE_URL}${endpoint}`,
+      url: `${endpoint}`,
       method: type,
       data: payload,
       headers: isFormData

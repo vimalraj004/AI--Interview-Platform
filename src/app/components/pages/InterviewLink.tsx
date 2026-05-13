@@ -22,7 +22,7 @@ interface InterviewLinkProps {
 }
 const InterviewLink = ({ interviewLinkId }: InterviewLinkProps) => {
   const url =
-    process.env.NEXT_PUBLIC_BASE_URL +
+    window.location.origin +
     "/" +
     "interview" +
     "/" +

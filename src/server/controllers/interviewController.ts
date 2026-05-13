@@ -76,7 +76,7 @@ const conversationText = allConversation.map(item => `${item.role}:${item.conten
     baseURL: "https://openrouter.ai/api/v1",
     apiKey: process.env.OPEN_ROUTER_API_KEY,
     defaultHeaders: {
-      "HTTP-Referer": process.env.BASE_URL, // change when deploying
+      "HTTP-Referer": process.env.SITE_URL, // change when deploying
       "X-Title": "AI Interview App",
     },
   });
