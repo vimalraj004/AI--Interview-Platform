@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from "next/server";
 import "@/server/models/feedbackModel";
 import { redis } from "@/lib/redis";
 
-export async function GET(req: NextRequest, res: NextResponse) {
+export async function GET(req: NextRequest) {
   try {
     await dbConnect();
     const email = req.nextUrl.searchParams.get("email");

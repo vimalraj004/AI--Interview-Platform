@@ -3,7 +3,7 @@ import { dbConnect } from "@/server/lib/db";
 import Feedback from "@/server/models/feedbackModel";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(req:NextRequest,res:NextResponse){
+export async function GET(req:NextRequest){
     try {
           await dbConnect();   
             const interveiwId = req.nextUrl.searchParams.get("interviewId");

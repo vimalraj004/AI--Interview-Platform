@@ -2,7 +2,7 @@ import { httpError } from "@/errors/http.erros";
 import { decryptToken } from "@/server/lib/jwt";
 import { NextRequest, NextResponse } from "next/server";
 
-export  async function GET(req:NextRequest,res:NextResponse){
+export  async function GET(req:NextRequest){
     try {
     const accessToken = await req.cookies.get("accessToken")?.value;
     if(!accessToken){

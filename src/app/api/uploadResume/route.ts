@@ -2,7 +2,7 @@ import { httpError } from "@/errors/http.erros";
 import { uploadResumeService } from "@/server/services/uploadResumePage";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(req:NextRequest,res:NextResponse){
+export async function POST(req:NextRequest){
     try {
         const formData = await req.formData();
         const resumeFile = formData.get("resume") as File;
